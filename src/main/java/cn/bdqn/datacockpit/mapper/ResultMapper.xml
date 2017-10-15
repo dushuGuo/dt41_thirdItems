@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.bdqn.datacockpit.mapper.ResultMapper">
+
+	<select id="getResult" parameterType="Integer" resultType="cn.bdqn.datacockpit.entity.Result">
+		SELECT
+  			id,
+  			aid,
+  			starttime,
+  			endtime,
+  			state,
+  			feedback,
+  			taskstatus
+		FROM
+  			result
+		WHERE aid = #{aid}
+		ORDER BY id DESC;
+	</select>
+	
+	<insert id="insertResult" parameterType="cn.bdqn.datacockpit.entity.Result">
+		insert into result(aid,starttime,state) values (#{aid},#{starttime},#{state})
+	</insert>
+	
+	<update id="updateResult" parameterType="cn.bdqn.datacockpit.entity.Result">
+		UPDATE
+  			result
+		SET
+  			<trim suffixOverrides=",">
+  				<if test="endtime != null"> endtime = #{endtime}, </if>
+  				<if test="state != null"> state = #{state}, </if>
+  				<if test="feedback != null"> feedback = #{feedback}, </if>
+  				<if test="taskstatus != null"> taskstatus = #{taskstatus}, </if>
+  			</trim>
+		WHERE id = #{id}
+	</update>
+</mapper>

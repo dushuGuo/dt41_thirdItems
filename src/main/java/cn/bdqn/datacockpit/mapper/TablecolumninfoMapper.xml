@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--  修改过-->
+<mapper namespace="cn.bdqn.datacockpit.mapper.TablecolumninfoMapper" >
+  <resultMap id="BaseResultMap" type="cn.bdqn.datacockpit.entity.Tablecolumninfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="tid" property="tid" jdbcType="INTEGER" />
+    <result column="columnName" property="columnname" jdbcType="VARCHAR" />
+    <result column="columnType" property="columntype" jdbcType="VARCHAR" />
+    <result column="physicalColumnName" property="physicalcolumnname" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, tid, columnName, columnType, physicalColumnName
+  </sql>
+  
+  <select id="selectAllTablecolumninfo" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tablecolumninfo
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tablecolumninfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectView" resultMap="BaseResultMap" parameterType="String" >
+  	SELECT  DATA_TYPE columnType, COLUMN_COMMENT columnName
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE table_name = #{tableName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tablecolumninfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.bdqn.datacockpit.entity.Tablecolumninfo" >
+    insert into tablecolumninfo (id, tid, columnName, 
+      columnType, physicalColumnName)
+    values (#{id,jdbcType=INTEGER}, #{tid,jdbcType=INTEGER}, #{columnname,jdbcType=VARCHAR}, 
+      #{columntype,jdbcType=VARCHAR}, #{physicalcolumnname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.bdqn.datacockpit.entity.Tablecolumninfo" >
+    insert into tablecolumninfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="tid != null" >
+        tid,
+      </if>
+      <if test="columnname != null" >
+        columnName,
+      </if>
+      <if test="columntype != null" >
+        columnType,
+      </if>
+      <if test="physicalcolumnname != null" >
+        physicalColumnName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="tid != null" >
+        #{tid,jdbcType=INTEGER},
+      </if>
+      <if test="columnname != null" >
+        #{columnname,jdbcType=VARCHAR},
+      </if>
+      <if test="columntype != null" >
+        #{columntype,jdbcType=VARCHAR},
+      </if>
+      <if test="physicalcolumnname != null" >
+        #{physicalcolumnname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.bdqn.datacockpit.entity.Tablecolumninfo" >
+    update tablecolumninfo
+    <set >
+      <if test="tid != null" >
+        tid = #{tid,jdbcType=INTEGER},
+      </if>
+      <if test="columnname != null" >
+        columnName = #{columnname,jdbcType=VARCHAR},
+      </if>
+      <if test="columntype != null" >
+        columnType = #{columntype,jdbcType=VARCHAR},
+      </if>
+      <if test="physicalcolumnname != null" >
+        physicalColumnName = #{physicalcolumnname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.bdqn.datacockpit.entity.Tablecolumninfo" >
+    update tablecolumninfo
+    set tid = #{tid,jdbcType=INTEGER},
+      columnName = #{columnname,jdbcType=VARCHAR},
+      columnType = #{columntype,jdbcType=VARCHAR},
+      physicalColumnName = #{physicalcolumnname,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

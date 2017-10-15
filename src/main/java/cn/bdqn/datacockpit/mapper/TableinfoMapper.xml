@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.bdqn.datacockpit.mapper.TableinfoMapper" >
+  <resultMap id="BaseResultMap" type="cn.bdqn.datacockpit.entity.Tableinfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="physicalTableName" property="physicaltablename" jdbcType="VARCHAR" />
+    <result column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="showtype" property="showtype" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, updateTime, physicalTableName, cid, state, showtype
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="Integer">
+  		SELECT * FROM `tableinfo` where cid=#{id } order by id desc
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tableinfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tableinfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.bdqn.datacockpit.entity.Tableinfo" >
+    insert into tableinfo (id, name, updateTime, 
+      physicalTableName, cid, state, 
+      showtype)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}, 
+      #{physicaltablename,jdbcType=VARCHAR}, #{cid,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, 
+      #{showtype,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.bdqn.datacockpit.entity.Tableinfo" >
+    insert into tableinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+      <if test="physicaltablename != null" >
+        physicalTableName,
+      </if>
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="showtype != null" >
+        showtype,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="physicaltablename != null" >
+        #{physicaltablename,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null" >
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="showtype != null" >
+        #{showtype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.bdqn.datacockpit.entity.Tableinfo" >
+    update tableinfo
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="physicaltablename != null" >
+        physicalTableName = #{physicaltablename,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null" >
+        cid = #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="showtype != null" >
+        showtype = #{showtype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.bdqn.datacockpit.entity.Tableinfo" >
+    update tableinfo
+    set name = #{name,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      physicalTableName = #{physicaltablename,jdbcType=VARCHAR},
+      cid = #{cid,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      showtype = #{showtype,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

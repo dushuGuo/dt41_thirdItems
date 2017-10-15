@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.bdqn.datacockpit.mapper.DatarelationMapper" >
+  <resultMap id="BaseResultMap" type="cn.bdqn.datacockpit.entity.Datarelation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="cname" property="cname" jdbcType="VARCHAR" />
+    <result column="tid1" property="tid1" jdbcType="INTEGER" />
+    <result column="tid1name" property="tid1name" jdbcType="VARCHAR" />
+    <result column="tid2" property="tid2" jdbcType="INTEGER" />
+    <result column="tid2name" property="tid2name" jdbcType="VARCHAR" />
+    <result column="col1" property="col1" jdbcType="INTEGER" />
+    <result column="col1name" property="col1name" jdbcType="VARCHAR" />
+    <result column="col2" property="col2" jdbcType="INTEGER" />
+    <result column="col2name" property="col2name" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, cid, tid1, tid2, col1, col2, state
+  </sql>
+  <select id="selectAlldatarelation" resultMap="BaseResultMap">
+    SELECT tt1.id,tt1.name,tt2.cid,tt1.compname AS cname,tt1.tbName AS tid1name,tt1.tcName AS col1name,tt2.tbName AS tid2name,tt2.tcName AS col2name,tt1.tid1,tt1.col1,tt2.tid2,tt2.col2,tt1.state
+    FROM (SELECT d.id,c.`compname`,d.`tid1`,d.`col1`,d.`name`,t.`name` AS tbName,tc.`columnname` AS tcName,d.`state` FROM datarelation d, tableinfo t,tablecolumninfo tc ,company c WHERE d.`tid1`=t.`id` AND d.`col1`=tc.`id` AND d.`cid`=c.`id`) AS tt1,
+    (SELECT d.id,d.`cid`,d.`tid2`,d.`col2`,d.`name`,t.`name` AS tbName,tc.`columnName` AS tcName,d.`state` FROM datarelation d, tableinfo t,tablecolumninfo tc WHERE d.`tid2`=t.`id` AND d.`col2`=tc.`id`) AS tt2 
+    WHERE tt1.id = tt2.id ORDER BY tt1.id DESC
+   </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT tt1.id,tt1.name,tt2.cid,tt1.compname AS cname,tt1.tbName AS tid1name,tt1.tcName AS col1name,tt2.tbName AS tid2name,tt2.tcName AS col2name,tt1.tid1,tt1.col1,tt2.tid2,tt2.col2,tt1.state
+    FROM (SELECT d.id,c.`compname`,d.`tid1`,d.`col1`,d.`name`,t.`name` AS tbName,tc.`columnname` AS tcName,d.`state` FROM datarelation d, tableinfo t,tablecolumninfo tc ,company c WHERE d.`tid1`=t.`id` AND d.`col1`=tc.`id` AND d.`cid`=c.`id`) AS tt1,
+    (SELECT d.id,d.`cid`,d.`tid2`,d.`col2`,d.`name`,t.`name` AS tbName,tc.`columnName` AS tcName,d.`state` FROM datarelation d, tableinfo t,tablecolumninfo tc WHERE d.`tid2`=t.`id` AND d.`col2`=tc.`id`) AS tt2 
+    WHERE tt1.id = tt2.id AND tt1.id = #{id,jdbcType=INTEGER} ORDER BY tt1.id DESC
+  </select>
+  <select id="selectByCid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT tt1.id,tt1.name,tt2.cid,tt1.compname AS cname,tt1.tbName AS tid1name,tt1.tcName AS col1name,tt2.tbName AS tid2name,tt2.tcName AS col2name,tt1.tid1,tt1.col1,tt2.tid2,tt2.col2,tt1.state
+    FROM (SELECT d.id,c.`compname`,d.`tid1`,d.`col1`,d.`name`,t.`name` AS tbName,tc.`columnname` AS tcName,d.`state` FROM datarelation d, tableinfo t,tablecolumninfo tc ,company c WHERE d.`tid1`=t.`id` AND d.`col1`=tc.`id` AND d.`cid`=c.`id`) AS tt1,
+    (SELECT d.id,d.`cid`,d.`tid2`,d.`col2`,d.`name`,t.`name` AS tbName,tc.`columnName` AS tcName,d.`state` FROM datarelation d, tableinfo t,tablecolumninfo tc WHERE d.`tid2`=t.`id` AND d.`col2`=tc.`id`) AS tt2 
+    WHERE tt1.id = tt2.id AND tt2.cid = #{cid,jdbcType=INTEGER} ORDER BY tt1.id DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from datarelation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.bdqn.datacockpit.entity.Datarelation" >
+    insert into datarelation (id, name, cid, 
+      tid1, tid2, col1, col2, 
+      state)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{cid,jdbcType=INTEGER}, 
+      #{tid1,jdbcType=INTEGER}, #{tid2,jdbcType=INTEGER}, #{col1,jdbcType=INTEGER}, #{col2,jdbcType=INTEGER}, 
+      #{state,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.bdqn.datacockpit.entity.Datarelation" >
+    insert into datarelation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="tid1 != null" >
+        tid1,
+      </if>
+      <if test="tid2 != null" >
+        tid2,
+      </if>
+      <if test="col1 != null" >
+        col1,
+      </if>
+      <if test="col2 != null" >
+        col2,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null" >
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="tid1 != null" >
+        #{tid1,jdbcType=INTEGER},
+      </if>
+      <if test="tid2 != null" >
+        #{tid2,jdbcType=INTEGER},
+      </if>
+      <if test="col1 != null" >
+        #{col1,jdbcType=INTEGER},
+      </if>
+      <if test="col2 != null" >
+        #{col2,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.bdqn.datacockpit.entity.Datarelation" >
+    update datarelation
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null" >
+        cid = #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="tid1 != null" >
+        tid1 = #{tid1,jdbcType=INTEGER},
+      </if>
+      <if test="tid2 != null" >
+        tid2 = #{tid2,jdbcType=INTEGER},
+      </if>
+      <if test="col1 != null" >
+        col1 = #{col1,jdbcType=INTEGER},
+      </if>
+      <if test="col2 != null" >
+        col2 = #{col2,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.bdqn.datacockpit.entity.Datarelation" >
+    update datarelation
+    set name = #{name,jdbcType=VARCHAR},
+      cid = #{cid,jdbcType=INTEGER},
+      tid1 = #{tid1,jdbcType=INTEGER},
+      tid2 = #{tid2,jdbcType=INTEGER},
+      col1 = #{col1,jdbcType=INTEGER},
+      col2 = #{col2,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

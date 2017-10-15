@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.bdqn.datacockpit.mapper.XsTableMapper" >
+  <resultMap id="BaseResultMap" type="cn.bdqn.datacockpit.entity.XsTable" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="times" property="times" jdbcType="DATE" />
+    <result column="f_nums" property="fNums" jdbcType="INTEGER" />
+    <result column="r_nums" property="rNums" jdbcType="INTEGER" />
+    <result column="t_nums" property="tNums" jdbcType="INTEGER" />
+    <result column="shows" property="shows" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, area, times, f_nums, r_nums, t_nums, shows
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select * from xiaoshoushujubiao
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xiaoshoushujubiao
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xiaoshoushujubiao
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.bdqn.datacockpit.entity.XsTable" >
+    insert into xiaoshoushujubiao (id, name, area, 
+      times, f_nums, r_nums, t_nums, 
+      shows)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
+      #{times,jdbcType=DATE}, #{fNums,jdbcType=INTEGER}, #{rNums,jdbcType=INTEGER}, #{tNums,jdbcType=INTEGER}, 
+      #{shows,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.bdqn.datacockpit.entity.XsTable" >
+    insert into xiaoshoushujubiao
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="times != null" >
+        times,
+      </if>
+      <if test="fNums != null" >
+        f_nums,
+      </if>
+      <if test="rNums != null" >
+        r_nums,
+      </if>
+      <if test="tNums != null" >
+        t_nums,
+      </if>
+      <if test="shows != null" >
+        shows,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="times != null" >
+        #{times,jdbcType=DATE},
+      </if>
+      <if test="fNums != null" >
+        #{fNums,jdbcType=INTEGER},
+      </if>
+      <if test="rNums != null" >
+        #{rNums,jdbcType=INTEGER},
+      </if>
+      <if test="tNums != null" >
+        #{tNums,jdbcType=INTEGER},
+      </if>
+      <if test="shows != null" >
+        #{shows,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.bdqn.datacockpit.entity.XsTable" >
+    update xiaoshoushujubiao
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="times != null" >
+        times = #{times,jdbcType=DATE},
+      </if>
+      <if test="fNums != null" >
+        f_nums = #{fNums,jdbcType=INTEGER},
+      </if>
+      <if test="rNums != null" >
+        r_nums = #{rNums,jdbcType=INTEGER},
+      </if>
+      <if test="tNums != null" >
+        t_nums = #{tNums,jdbcType=INTEGER},
+      </if>
+      <if test="shows != null" >
+        shows = #{shows,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.bdqn.datacockpit.entity.XsTable" >
+    update xiaoshoushujubiao
+    set name = #{name,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      times = #{times,jdbcType=DATE},
+      f_nums = #{fNums,jdbcType=INTEGER},
+      r_nums = #{rNums,jdbcType=INTEGER},
+      t_nums = #{tNums,jdbcType=INTEGER},
+      shows = #{shows,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getTableList" parameterType="String" resultType="int">
+  
+  
+  SELECT COUNT(*) FROM information_schema.`COLUMNS`  WHERE TABLE_SCHEMA='dt40_team0_db'  AND TABLE_NAME=#{tableName };
+  
+  </select>
+</mapper>

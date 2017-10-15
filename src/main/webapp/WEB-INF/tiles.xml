@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+    <!-- 定义一个基础模板页(后台) -->
+    <definition name="template_base1" template="/WEB-INF/layout/admin/template.jsp"></definition>
+
+    <!-- 不继承直接引用也行 -->
+    <definition name="*.page" extends="template_base1">
+        <put-attribute name="title" value="" />
+         <put-attribute name="linkCSS" value="/WEB-INF/layout/admin/css.jsp" />
+        <put-attribute name="header" value="/WEB-INF/layout/admin/header.jsp" />
+        <put-attribute name="body" value="/WEB-INF/tiles/admin/{1}.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/layout/admin/footer.jsp" />
+        <put-attribute name="scripts" value="/WEB-INF/tiles/admin/{1}-js.jsp" />
+        <put-attribute name="linkJS" value="/WEB-INF/layout/admin/javaScript.jsp" />
+    </definition>
+     <!-- 定义一个基础模板页(前台) -->
+    <definition name="template_base2" template="/WEB-INF/layout/user/template.jsp"></definition>
+
+    <!-- 不继承直接引用也行 -->
+    <definition name="*.pages" extends="template_base2">
+        <put-attribute name="title" value="" />
+        <put-attribute name="linkCSS" value="/WEB-INF/layout/user/css.jsp" />
+        <put-attribute name="header" value="/WEB-INF/layout/user/header.jsp" />
+        <put-attribute name="body" value="/WEB-INF/tiles/user/{1}.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/layout/user/footer.jsp" />
+        <put-attribute name="scripts" value="/WEB-INF/tiles/user/{1}-js.jsp" />
+        <put-attribute name="linkJS" value="/WEB-INF/layout/user/javaScript.jsp" />
+    </definition>
+</tiles-definitions>

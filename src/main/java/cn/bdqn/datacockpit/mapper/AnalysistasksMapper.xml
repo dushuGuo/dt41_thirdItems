@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.bdqn.datacockpit.mapper.AnalysistasksMapper">
+
+	<resultMap type="cn.bdqn.datacockpit.entity.Analysistasks" id="AnalysistasksMap" autoMapping="true">
+		<id column="id" property="id"/>
+		<association property="datarelation" javaType="cn.bdqn.datacockpit.entity.Datarelation">
+			<id column="dataid" property="id"/>
+			<result column="dataname" property="name"/>
+			<result column="datacid" property="cid"/>
+			<result column="datatid1" property="tid1"/>
+			<result column="datatid2" property="tid2"/>
+			<result column="datacol1" property="col1"/>
+			<result column="datacol2" property="col2"/>
+		</association>
+	</resultMap>
+
+	<select id="getAnalysistasks" parameterType="cn.bdqn.datacockpit.entity.Analysistasks" resultMap="AnalysistasksMap">
+		SELECT
+  			an.*,
+			da.id dataid,
+			da.name dataname,
+			da.cid datacid,
+			da.tid1 datatid1,
+			da.tid2 datatid2,
+			da.col1 datacol1,
+			da.col2 datacol2
+		FROM
+  			analysistasks an,
+  			datarelation da
+		WHERE an.did = da.id
+  		AND da.state = 1
+  		<if test="id != null">AND an.id = #{id}</if>
+  		<if test="cid != null">AND an.cid = #{cid}</if>
+  		<if test="did != null">AND an.did = #{did}</if>
+  		<if test="arithmeticid !=null">AND an.arithmeticid = #{arithmeticid}</if>
+		ORDER BY an.id DESC
+	</select>
+	
+	<insert id="insertAnalysistasks" parameterType="cn.bdqn.datacockpit.entity.Analysistasks">
+		INSERT INTO analysistasks (
+  			cid,
+  			did,
+  			arithmeticid,
+  			rule
+		)
+		VALUES
+  		(#{cid},#{did},#{arithmeticid},#{rule})
+	</insert>
+
+	<delete id="deleteAnalysistasks" parameterType="Integer">
+		delete from analysistasks where id=#{id}
+	</delete>
+</mapper>
