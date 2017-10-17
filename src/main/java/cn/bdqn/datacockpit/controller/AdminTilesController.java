@@ -1,17 +1,15 @@
 package cn.bdqn.datacockpit.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -41,7 +39,6 @@ import cn.bdqn.datacockpit.service.UserinfoService;
 import cn.bdqn.datacockpit.utils.ChineseToPinYin;
 import cn.bdqn.datacockpit.utils.JdbcUtil;
 
-
 @Controller
 public class AdminTilesController {
     @Autowired
@@ -59,29 +56,26 @@ public class AdminTilesController {
     @Autowired
     private DatarelationService datarelationService;
 
-    
     @Autowired
     private AnalysistasksService analysistasksService;
-    
+
     @Autowired
     private ResultService resultService;
-    
+
     @Autowired
     private TablecolumninfoService tcs;
-    
+
     @RequestMapping("/admin_index")
     public String index(Model model) {
         return "admin_index.page";
     }
 
-    
     @RequestMapping("/admin_tongzhi1")
     public String tongzhi1(Model model) {
         model.addAttribute("menus", "1");
         return "admin_tongzhi1.page";
     }
 
-    
     @RequestMapping("/admin_tongzhi2")
     public String tongzhi2(Model model) {
         return "admin_tongzhi2.page";
@@ -103,7 +97,6 @@ public class AdminTilesController {
         return "admin_tongzhi1.page";
     }
 
-    
     @RequestMapping("/tongzhi_insert")
     public String tongzhi_insert(Info info) {
         // 获取实体类信息，将新增数据存入数据库
@@ -153,7 +146,6 @@ public class AdminTilesController {
         return "aduser_update.page";
     }
 
-    
     @RequestMapping("/adminuss_updatee")
     public String adminuss_updatee(HttpServletRequest req) {
         // 获取实体类信息
@@ -231,6 +223,16 @@ public class AdminTilesController {
 
     @RequestMapping("insertAdminReg")
     public String insertAdminReg(Userinfo record) {
+        // 获取原始密码
+        String password = record.getPassword();
+        // 加密盐
+        String salt = record.getEmail();
+        // MD5
+        Md5Hash md5 = new Md5Hash(password, salt, 2);
+        // 加密后
+        String md5PassWord = md5.toString();
+        // 存储修改 后的密码
+        record.setPassword(md5PassWord);
         int flag = us.insertSelective(record);
         // 转发
         return "admin_shuju4.page";
@@ -274,14 +276,12 @@ public class AdminTilesController {
         return "admin_userMan.page";
     }
 
-    
     @RequestMapping("/admin_uppassword")
     public String admin_uppassword(Model model) {
         model.addAttribute("checks", "geren2");
         return "admin_pass.page";
     }
-    
-    
+
     @RequestMapping("/admin_selects")
     public String selects(Model model) {
         List<Companyinfo> lists = companyinfo.selectAllCompanies();
@@ -291,7 +291,7 @@ public class AdminTilesController {
         // 转发
         return "admin_userMan.page";
     }
-    
+
     /**
      * 公告详情
      * 
@@ -305,7 +305,6 @@ public class AdminTilesController {
         return "admin_gongGao.page";
     }
 
-
     @RequestMapping("/admin_adds")
     public String adds(Model model) {
 
@@ -317,23 +316,22 @@ public class AdminTilesController {
         // 转发
         return null;
     }
-    
-    
-  //=========================================================================  
-  //=========================================================================  
-  //=========================================================================  
+
+    // =========================================================================
+    // =========================================================================
+    // =========================================================================
     /**
      * 
-     * @param model  平台——企业数据管理
+     * @param model 平台——企业数据管理
      * @param req
      * @return
      * @throws Exception
      */
     @RequestMapping("/admin_cominfo")
-    public String cominfo() {       
+    public String cominfo() {
         return "admin_cominfo.page";
     }
-    
+
     /**
      * 
      * @Description (平台— 跳转到 数据表管理页面)
@@ -344,27 +342,27 @@ public class AdminTilesController {
      */
     @RequestMapping("/admin_shuju1_1")
     public String shuju1_1(HttpServletRequest req) {
-        //获取企业的id
+        // 获取企业的id
         String id = req.getParameter("id");
         HttpSession session = req.getSession();
-        if(id != null){
-            //存入session，方便 数据分析管理和分析任务管理页面使用           
+        if (id != null) {
+            // 存入session，方便 数据分析管理和分析任务管理页面使用
             session.setAttribute("No1", id);
-            //跳到数据表管理页面
+            // 跳到数据表管理页面
             return "admin_shuju1.page";
-        }else{
+        } else {
             String ids = (String) session.getAttribute("No1");
-            if(ids != null){
-                //跳到数据表管理页面
+            if (ids != null) {
+                // 跳到数据表管理页面
                 return "admin_shuju1.page";
-            }else{
-                //跳到企业名单页面
+            } else {
+                // 跳到企业名单页面
                 return "admin_cominfo.page";
             }
         }
-        
+
     }
-    
+
     /**
      * 
      * @Description (平台——新建数据表)
@@ -383,14 +381,14 @@ public class AdminTilesController {
         String tbName = null;
         for (int i = 0; i < attr.length; i++) {
             if (i == 0) {
-                //存图形id
+                // 存图形id
                 map.put("shows", attr[0]);
             } else if (i == 1) {
                 HttpSession session = req.getSession();
-                //拼接新建表名为用户id+表明（防止重名）
-                tbName =No1Id+ ctp.getPingYin(attr[1]);
+                // 拼接新建表名为用户id+表明（防止重名）
+                tbName = No1Id + ctp.getPingYin(attr[1]);
             } else if (2 * i - 1 <= attr.length) {
-                //存 字段名 和 字段类型
+                // 存 字段名 和 字段类型
                 map.put(ctp.getPingYin(attr[2 * i - 2]), attr[2 * i - 1]);
                 mapChina.put(ctp.getPingYin(attr[2 * i - 2]), attr[2 * i - 2]);
             }
@@ -400,7 +398,7 @@ public class AdminTilesController {
         ApplicationContext context = creats.getContext();
         context = new ClassPathXmlApplicationContext("spring-common.xml");
         JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
-        creats.createTable(jt, tbName, map,mapChina);
+        creats.createTable(jt, tbName, map, mapChina);
 
         Date dt = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -429,34 +427,34 @@ public class AdminTilesController {
      * @return
      */
     @RequestMapping("/admin_shujus")
-       public String shuju3(Model model, HttpServletRequest req) {
-           
-           String infoId = req.getParameter("infoId");
-           Tableinfo tableinfo = ts.selectByPrimaryKey(Integer.parseInt(infoId));
-           String tableName = tableinfo.getPhysicaltablename();
-           List<Tablecolumninfo> TablecolumninfoList = tcs.selectView(tableName);
-           TablecolumninfoList.get(0).setColumnname("序号");
-           HttpSession session = req.getSession();
-           session.setAttribute("TablecolumninfoList", TablecolumninfoList);
-           
-           model.addAttribute("menus", "3");
-           String names = req.getParameter("id");
-           
-           ChineseToPinYin ctp = new ChineseToPinYin();
-           String name = ctp.getPingYin(names);
-           model.addAttribute("name2", names);
-           model.addAttribute("name1", name);
-           
-           JdbcUtil jdbc1 = new JdbcUtil();
-           ApplicationContext context = jdbc1.getContext();
-           context = new ClassPathXmlApplicationContext("spring-common.xml");
-           JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
+    public String shuju3(Model model, HttpServletRequest req) {
 
-           return "admin_shujus.page";
-       }
-    
-//=======================================================================    
-    
+        String infoId = req.getParameter("infoId");
+        Tableinfo tableinfo = ts.selectByPrimaryKey(Integer.parseInt(infoId));
+        String tableName = tableinfo.getPhysicaltablename();
+        List<Tablecolumninfo> TablecolumninfoList = tcs.selectView(tableName);
+        TablecolumninfoList.get(0).setColumnname("序号");
+        HttpSession session = req.getSession();
+        session.setAttribute("TablecolumninfoList", TablecolumninfoList);
+
+        model.addAttribute("menus", "3");
+        String names = req.getParameter("id");
+
+        ChineseToPinYin ctp = new ChineseToPinYin();
+        String name = ctp.getPingYin(names);
+        model.addAttribute("name2", names);
+        model.addAttribute("name1", name);
+
+        JdbcUtil jdbc1 = new JdbcUtil();
+        ApplicationContext context = jdbc1.getContext();
+        context = new ClassPathXmlApplicationContext("spring-common.xml");
+        JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
+
+        return "admin_shujus.page";
+    }
+
+    // =======================================================================
+
     /**
      * 
      * @Description (平台—跳转到分析任务管理页面)
@@ -467,19 +465,17 @@ public class AdminTilesController {
     @RequestMapping("/admin_shuju1_3")
     public String admin_shuju1_3(HttpServletRequest req) {
         HttpSession session = req.getSession();
-        //获取企业的id
+        // 获取企业的id
         String ids = (String) session.getAttribute("No1");
-        if(ids != null){
-            //跳到分析任务管理页面
+        if (ids != null) {
+            // 跳到分析任务管理页面
             return "admin_shuju1_3.page";
-        }else{
-            //跳到企业名单页面
+        } else {
+            // 跳到企业名单页面
             return "admin_cominfo.page";
         }
     }
-    
-    
-    
+
     /**
      * 
      * @param model 平台—跳转到 分析任务结果页面
@@ -489,86 +485,83 @@ public class AdminTilesController {
     @RequestMapping("/admin_shuju3")
     public String admin_shuju3(Model model, HttpServletRequest req) {
         String aid = req.getParameter("id");
-        if(aid != null){
+        if (aid != null) {
             List<Result> result = resultService.getResult(Integer.parseInt(aid));
             model.addAttribute("result", result);
-            
+
             Analysistasks analysistasks = new Analysistasks();
             analysistasks.setId(Integer.parseInt(aid));
             List<Analysistasks> lists = analysistasksService.getAnalysistasks(analysistasks);
             model.addAttribute("message2", lists.get(0));
-            
+
             return "admin_shuju3.page";
-        }else{
+        } else {
             return "admin_shuju1_3.shtml";
         }
     }
-    
-//==============================================================
-    
+
+    // ==============================================================
 
     /**
      * 
-     * @param model    平台——企业数据关系管理
+     * @param model 平台——企业数据关系管理
      * @param req
      * @return
      * @throws Exception
      */
     @RequestMapping("/admin_shuju1_2")
     public String shuju1_2(Model model, HttpServletRequest req) throws Exception {
-        
+
         HttpSession session = req.getSession();
-        String id=(String) session.getAttribute("No1");
+        String id = (String) session.getAttribute("No1");
         Integer cid = Integer.parseInt(id);
         List<Datarelation> datarelationList = datarelationService.selectByCid(cid);
         model.addAttribute(datarelationList);
         return "admin_shuju1_2.page";
     }
-    
-    
-  
+
     /**
      * 
-     * @param datarelation  平台——新增数据表关联
+     * @param datarelation 平台——新增数据表关联
      * @param req
      * @return
      */
     @ResponseBody
     @RequestMapping("/insert_guanlian")
-    public Integer insertGL(Datarelation datarelation,HttpServletRequest req) {
+    public Integer insertGL(Datarelation datarelation, HttpServletRequest req) {
         HttpSession session = req.getSession();
         String ids = (String) session.getAttribute("No1");
         Integer cid = Integer.parseInt(ids);
         datarelation.setCid(cid);
         datarelation.setState(1);
-        Integer flag=-2;
+        Integer flag = -2;
         Tableinfo tableinfo1 = ts.selectByPrimaryKey(datarelation.getTid1());
         String tableName1 = tableinfo1.getPhysicaltablename();
         List<Tablecolumninfo> TablecolumninfoList1 = tcs.selectView(tableName1);
         Tableinfo tableinfo2 = ts.selectByPrimaryKey(datarelation.getTid2());
         String tableName2 = tableinfo2.getPhysicaltablename();
         List<Tablecolumninfo> TablecolumninfoList2 = tcs.selectView(tableName2);
-        Tablecolumninfo tablecolumninfo1 = TablecolumninfoList1.get(datarelation.getCol1()-1);
-        Tablecolumninfo tablecolumninfo2 = TablecolumninfoList2.get(datarelation.getCol2()-1);
+        Tablecolumninfo tablecolumninfo1 = TablecolumninfoList1.get(datarelation.getCol1() - 1);
+        Tablecolumninfo tablecolumninfo2 = TablecolumninfoList2.get(datarelation.getCol2() - 1);
         String columntype1 = tablecolumninfo1.getColumntype();
         String columntype2 = tablecolumninfo2.getColumntype();
-        if(columntype1.equals(columntype2)){
+        if (columntype1.equals(columntype2)) {
             flag = datarelationService.insert(datarelation);
             tablecolumninfo1.setTid(datarelation.getTid1());
             tablecolumninfo2.setTid(datarelation.getTid2());
             tcs.insertSelective(tablecolumninfo1);
             tcs.insertSelective(tablecolumninfo2);
-            if (flag >= 1) 
+            if (flag >= 1)
                 return flag;
             else
                 return flag;
-        }else
+        } else
             return flag;
     }
 
-    
     /**
-     * 增加方法     平台——获得数据表
+     * 增加方法 平台——获得数据表
+     * 
      * @param req
      * @return
      */
@@ -581,38 +574,34 @@ public class AdminTilesController {
         List<Tableinfo> lists = ts.selectAll(id);
         return lists;
     }
-    
-    
+
     /**
-     * 增加方法    平台——获得数据表关联集合
+     * 增加方法 平台——获得数据表关联集合
+     * 
      * @param id
-     * @param req  
+     * @param req
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/admin_shuju_datarelation")
-    public List<Tablecolumninfo> shuju_datarelation(Integer id,HttpServletRequest req) throws Exception {
+    public List<Tablecolumninfo> shuju_datarelation(Integer id, HttpServletRequest req) throws Exception {
         Tableinfo tableinfo = ts.selectByPrimaryKey(id);
         String tableName = tableinfo.getPhysicaltablename();
         List<Tablecolumninfo> TablecolumninfoList = tcs.selectView(tableName);
         return TablecolumninfoList;
     }
-    
+
     /**
      * 
-     * @param datarlation   平台——修改数据表关联状态
+     * @param datarlation 平台——修改数据表关联状态
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/admin_shuju_updateByState")
     public Integer shuju_updateByState(Datarelation datarlation) throws Exception {
-        return  datarelationService.updateByPrimaryKeySelective(datarlation);
+        return datarelationService.updateByPrimaryKeySelective(datarlation);
     }
-    
-    
-    
-    
-    
+
 }
