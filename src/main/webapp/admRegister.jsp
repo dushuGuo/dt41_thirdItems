@@ -45,7 +45,7 @@
 
 <div class="login-box">
   <div class="login-logo">
-    <a href="#" style="color: white;font-family: Microsoft YaHei;"><b>注&nbsp;册</b></a>
+    <a href="#" style="color: white;font-family: Microsoft YaHei;"><b>添&nbsp;加&nbsp;账&nbsp;号</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body" style="background-color: rgba(54,167,129,.4); height: 370px;">
@@ -77,7 +77,7 @@
       </div>     
       <div><span style="color:red" id="erroMessage"></span></div>
        <div class="col-xs-4" style="width: 320px;margin-top: 1px">
-          <button type="submit" class="btn btn-primary btn-block btn-flat" style="font-size: 16px;">立即注册</button>
+          <button type="submit" class="btn btn-primary btn-block btn-flat" style="font-size: 16px;">确认添加</button>
         </div>
        
         <!-- /.col -->
