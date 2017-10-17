@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8" isELIgnored="false"%>
-    
+    pageEncoding="utf-8" isELIgnored="false"%>   
 <%
 	String context=request.getContextPath();
 	String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+context+"/";

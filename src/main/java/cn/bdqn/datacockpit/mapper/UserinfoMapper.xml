@@ -11,8 +11,8 @@
     <result column="state" property="state" jdbcType="INTEGER" />
   </resultMap>
   <!-- shiro专用方法 -->
-  <select id="getByPhone" parameterType="String" resultMap="BaseResultMap">
-		SELECT * FROM userinfo WHERE phone=#{phone}
+  <select id="getByPhoneOrEmail" parameterType="String" resultMap="BaseResultMap">
+		SELECT * FROM userinfo WHERE phone=#{phone} or email=#{email}
 	</select>
 	
 	<select id="getRoles" parameterType="String" resultMap="BaseResultMap">

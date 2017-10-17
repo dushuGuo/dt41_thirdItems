@@ -3,37 +3,39 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
-		http://www.springframework.org/schema/beans 
+	   http://www.springframework.org/schema/beans 
        http://www.springframework.org/schema/beans/spring-beans.xsd 
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd">
-
+       
 	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
-	<context:component-scan base-package="cn.bdqn.datacockpit.service.impl,cn.bdqn.datacockpit.utils" />
-		
-	<!-- JDBC操作模板 --> 
+	<context:component-scan
+		base-package="cn.bdqn.datacockpit.service.impl,cn.bdqn.datacockpit.utils" />
+
+	<!-- JDBC操作模板 -->
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<constructor-arg>
-			<ref bean="basicDataSource"/>
+			<ref bean="basicDataSource" />
 		</constructor-arg>
-	</bean>		
-	
-	<!-- 用于初始化获得Spring对象的类 -->  
-    <bean id="springfactory" class="cn.bdqn.datacockpit.utils.SpringFactory"></bean> 
+	</bean>
+
+	<!-- 用于初始化获得Spring对象的类 -->
+	<bean id="springfactory" class="cn.bdqn.datacockpit.utils.SpringFactory"></bean>
 
 	<!-- 读取数据库配置文件 -->
-    <context:property-placeholder location="classpath:jdbc.properties" />
+	<context:property-placeholder location="classpath:jdbc.properties" />
 
 	<!-- 配置数据源 -->
-	<bean id="basicDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" scope="singleton">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql:///datacockpit40" />
-        <property name="username" value="root" />
-        <property name="password" value="root" />
-        <property name="maxActive" value="30" />
-        <property name="maxIdle" value="5" />
+	<bean id="basicDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" scope="singleton">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxActive" value="${jdbc.maxActive}" />
+		<property name="maxIdle" value="${jdbc.maxIdle}" />
 	</bean>
 
 	<!-- 扫描保存sql语句的xml文件 -->
@@ -57,45 +59,13 @@
 	<!-- 事务注解驱动 -->
 	<tx:annotation-driven transaction-manager="transactionManager"
 		proxy-target-class="true" />
-		
-		
- <!-- 自定义Realm -->
-		 <bean id="myRealm" class="cn.bdqn.datacockpit.realm.MyRealm"/>  
-		
-		
-		<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
-	  	  <property name="realm" ref="myRealm"/>  
-		</bean>  
-		
-		
-		<bean id="ShiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">  
-		   
-		    <property name="securityManager" ref="securityManager"/>
-		
-		   <property name="loginUrl" value="/login.jsp"/> 
-		  
-		    <property name="unauthorizedUrl" value="/login.jsp"/>  
-		       
-		    <property name="filterChainDefinitions">  
-		        <value>  
-		            /login.jsp=anon           
-		            /pages/register.jsp=anon
-		            /pages/wangjimima.jsp=anon
-		            /pages/yonghuxieyi.jsp=anon
-		            /getYzm=anon
-		            *.shtml=anon
-		        </value>  
-		    </property>
-		</bean>  
-		
-		
-		<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>  
-		
-	
-		<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>  
-	  		<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
-	  	  <property name="securityManager" ref="securityManager"/>  
-	    </bean>  
-	    
+
+	<!-- 自定义Realm -->
+	<bean id="myRealm" class="cn.bdqn.datacockpit.realm.MyRealm" />
+
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm" />
+	</bean>
 	
 </beans>

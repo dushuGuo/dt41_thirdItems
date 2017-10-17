@@ -49,11 +49,10 @@ public class UserinfoServiceImpl implements UserinfoService {
         int flag = userinfoMapper.insert(record);
         return flag;
     }
-    
-	/**
-	 * wb
-	 * 审核通过，往Userinfo表里添加一个用户对象
-	 */
+
+    /**
+     * wb 审核通过，往Userinfo表里添加一个用户对象
+     */
     @Override
     public int insertSelective(Userinfo record) {
         int flag = userinfoMapper.insertSelective(record);
@@ -78,8 +77,8 @@ public class UserinfoServiceImpl implements UserinfoService {
     }
 
     @Override
-    public Userinfo getByPhone(String phone) {
-        return userinfoMapper.getByPhone(phone);
+    public Userinfo getByPhoneOrEmail(String phone) {
+        return userinfoMapper.getByPhoneOrEmail(phone);
     }
 
     @Override
