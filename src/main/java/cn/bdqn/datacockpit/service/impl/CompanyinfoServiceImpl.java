@@ -16,8 +16,7 @@ public class CompanyinfoServiceImpl implements CompanyinfoService {
     private CompanyinfoMapper companyinfo;
 
     /**
-     * wb
-     * 查询所有公司信息.
+     * wb 查询所有公司信息.
      * 
      * @see cn.bdqn.datacockpit.service.CompanyinfoService#selectAllCompanies()
      */
@@ -27,8 +26,7 @@ public class CompanyinfoServiceImpl implements CompanyinfoService {
     }
 
     /**
-     * wb
-     * 根据指定的公司id删除公司客户.审核未通过
+     * wb 根据指定的公司id删除公司客户.审核未通过
      * 
      * @see cn.bdqn.datacockpit.service.CompanyinfoService#deleteByPrimaryKey(java.lang.Integer)
      */
@@ -63,8 +61,7 @@ public class CompanyinfoServiceImpl implements CompanyinfoService {
     }
 
     /**
-     * wb
-     * 查询指定的公司信息.
+     * wb 查询指定的公司信息.
      * 
      * @see cn.bdqn.datacockpit.service.CompanyinfoService#selectByPrimaryKey(java.lang.Integer)
      */
@@ -74,8 +71,7 @@ public class CompanyinfoServiceImpl implements CompanyinfoService {
     }
 
     /**
-     * wb
-     * 动态修改公司客户信息.
+     * wb 动态修改公司客户信息.
      * 
      * @see cn.bdqn.datacockpit.service.CompanyinfoService#updateByPrimaryKeySelective(cn.bdqn.datacockpit.entity.Companyinfo)
      */
@@ -86,8 +82,7 @@ public class CompanyinfoServiceImpl implements CompanyinfoService {
     }
 
     /**
-     * wb
-     * 修改指定公司的信息.
+     * wb 修改指定公司的信息.
      * 
      * @see cn.bdqn.datacockpit.service.CompanyinfoService#updateByPrimaryKey(cn.bdqn.datacockpit.entity.Companyinfo)
      */
@@ -101,9 +96,9 @@ public class CompanyinfoServiceImpl implements CompanyinfoService {
      * 根据phone查询登录状况
      */
     @Override
-    public Companyinfo selectByPhone(String phone) {
+    public Companyinfo selectByPhoneOrEmail(String phone) {
 
-        return companyinfo.selectByPhone(phone);
+        return companyinfo.selectByPhoneOrEmail(phone);
     }
 
     /**
@@ -114,15 +109,14 @@ public class CompanyinfoServiceImpl implements CompanyinfoService {
 
         return companyinfo.selectPhoneNum(phone);
     }
-    
+
     /**
-     * wb
-     * 获取未审核状态公司信息
+     * wb 获取未审核状态公司信息
      */
 
-	@Override
-	public List<Companyinfo> selectAllCompaniesByApproval() {
-		return companyinfo.selectAllCompaniesByApproval();
-	}
+    @Override
+    public List<Companyinfo> selectAllCompaniesByApproval() {
+        return companyinfo.selectAllCompaniesByApproval();
+    }
 
 }
