@@ -62,7 +62,8 @@ public class LoginController {
     private InfoService infoService;
 
     // @RequestMapping(value = "getYzm")
-    public @ResponseBody List<String> getYzm(HttpServletResponse response, HttpServletRequest request) {
+    public @ResponseBody
+    List<String> getYzm(HttpServletResponse response, HttpServletRequest request) {
         List<String> lists = new ArrayList<String>();
         try {
             response.setHeader("Pragma", "No-cache");
@@ -159,6 +160,7 @@ public class LoginController {
         // return "redirect:/login.jsp";
         // }
         Subject subject = SecurityUtils.getSubject();
+
         UsernamePasswordToken token = new UsernamePasswordToken(user.getPhone(), user.getPassword());
         try {
             subject.login(token);
@@ -295,6 +297,7 @@ public class LoginController {
     @RequestMapping("/gongGao")
     public String gongGao(Integer id, Model model) {
         // System.out.println(id);
+
         Info info = infoService.selectByPrimaryKey(id);
         model.addAttribute("gg", info);
         return "user_gongGao.pages";
