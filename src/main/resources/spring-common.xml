@@ -59,13 +59,5 @@
 	<!-- 事务注解驱动 -->
 	<tx:annotation-driven transaction-manager="transactionManager"
 		proxy-target-class="true" />
-
-	<!-- 自定义Realm -->
-	<bean id="myRealm" class="cn.bdqn.datacockpit.realm.MyRealm" />
-
-	<!-- 安全管理器 -->
-	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="myRealm" />
-	</bean>
 	
 </beans>
