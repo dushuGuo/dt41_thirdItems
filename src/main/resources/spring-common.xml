@@ -58,5 +58,9 @@
 	</bean>
 	<!-- 事务注解驱动 -->
 	<tx:annotation-driven transaction-manager="transactionManager"
+<<<<<<< HEAD
+		proxy-target-class="true" />	
+=======
 		proxy-target-class="true" />
+>>>>>>> refs/remotes/origin/master
 </beans>
