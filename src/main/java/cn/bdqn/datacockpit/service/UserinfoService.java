@@ -10,6 +10,7 @@
 package cn.bdqn.datacockpit.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cn.bdqn.datacockpit.entity.Userinfo;
@@ -40,6 +41,11 @@ public interface UserinfoService {
     int updateByPrimaryKeySelective(Userinfo record);
 
     int updateByPrimaryKey(Userinfo record);
+
+    // 利用邮箱或者手机号取出对应手机号信息
+    String selectByPanduan(String phone);
+
+    List<Map<String, Object>> selectByPhone(String phone);
 
     /**
      * shiro通过电话号查询用户

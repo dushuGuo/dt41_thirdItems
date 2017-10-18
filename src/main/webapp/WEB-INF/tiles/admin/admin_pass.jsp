@@ -17,12 +17,10 @@
     <form action="./updatePassword1.shtml" method="post">
     	<input type="hidden" value="${comp.id }" name="id">
       <div class="form-group has-feedback" id="ddd1">
-
         <sapn style="display: block;margin-bottom: -30px">原密码： </sapn>
-              <input type="text" class="form-control" style="width: 270px;margin-left: 85px"   name="oldPassword">
+        <input type="text" class="form-control" style="width: 270px;margin-left: 85px"   name="oldPassword">
       </div>
       <div class="form-group has-feedback" style="margin-top: 30px">
-
         <sapn style="display: block;margin-bottom: -30px">新密码： </sapn>
              <input type="password" class="form-control" style="width: 270px;margin-left: 85px"  name="password" pattern="[0-9a-zA-Z]{8,16}" required="required">
       </div>

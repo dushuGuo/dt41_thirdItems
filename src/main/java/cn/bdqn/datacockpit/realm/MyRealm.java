@@ -36,16 +36,20 @@ public class MyRealm extends AuthorizingRealm {
         // 获取令牌
         String phone = (String) principals.getPrimaryPrincipal();
         // 根据phone查询权限数据
-        List<Map<String, Object>> listPermission = new ArrayList<>();
+        phone = userService.selectByPanduan(phone);
+        List<Map<String, Object>> listPermission = userService.selectByPhone(phone);
         // 创建list集合，存储权限数据
         List<String> listPermissions = new ArrayList<String>();
         // 判断
-        if (listPermission != null) {
+        if (listPermission != null && !listPermission.isEmpty()) {
             for (Map<String, Object> map : listPermission) {
                 // 权限名称
-                String perName = (String) map.get("perName");
-                // 存储到list集合中
-                listPermissions.add(perName);
+                String perName = (String) map.get("per_name");
+                // 如果没有就添加进去
+                if (!listPermissions.contains(perName)) {
+                    // 存储到list集合中
+                    listPermissions.add(perName);
+                }
             }
         }
         System.out.println(listPermissions);
@@ -72,6 +76,8 @@ public class MyRealm extends AuthorizingRealm {
             if (user != null) {
                 // 获取盐（邮箱）
                 String email = user.getEmail();
+                // authcInfo = new SimpleAuthenticationInfo(user.getPhone(),
+                // user.getPassword(), "xx");
                 authcInfo = new SimpleAuthenticationInfo(user.getPhone(), user.getPassword(),
                         ByteSource.Util.bytes(email), "xx");
             }
@@ -80,6 +86,8 @@ public class MyRealm extends AuthorizingRealm {
                 String email = compi.getEmail();
                 authcInfo = new SimpleAuthenticationInfo(compi.getPhone(), compi.getPassword(),
                         ByteSource.Util.bytes(email), "xx");
+                // authcInfo = new SimpleAuthenticationInfo(compi.getPhone(),
+                // compi.getPassword(), "xx");
             }
             return authcInfo;
         } catch (Exception e) {

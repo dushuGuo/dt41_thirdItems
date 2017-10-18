@@ -21,12 +21,12 @@
    <select id="selectAllCompanies" resultMap="BaseResultMap">
     select 
     id, corpName, phone, name, job, email, state, approval
-    from companyinfo where approval=1
+    from companyinfo where approval=2
   </select>
   <select id="selectAllCompaniesByApproval" resultMap="BaseResultMap">
     select 
     id, corpName, phone, name, job, email, state, approval
-    from companyinfo where approval=2
+    from companyinfo where approval=1
   </select>
   
  <!--  wb -->

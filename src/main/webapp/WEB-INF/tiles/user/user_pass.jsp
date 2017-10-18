@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" import="cn.bdqn.datacockpit.entity.Companyinfo" isELIgnored="false"%>
-
  <!-- Main content -->
     <section class="content container-fluid" style="background:url(resource/images/pic5.jpg);width: 100%;height:600px">
 

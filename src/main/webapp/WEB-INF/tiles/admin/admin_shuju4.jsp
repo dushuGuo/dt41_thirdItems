@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>
 
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -14,7 +15,7 @@
           <div class="box" style="border-top-color: #DD4B39;">
             <div class="box-header">
               <h3 class="box-title">
-              <a href="./admRegister.jsp" style="color: white"><button class="btn btn-primary btn-lg" data-toggle="modal" style="width: 100px;height: 30px;font-size: 14px;line-height: 0px">添加新账号</button></a>
+              <a href="admin_addUsers.shtml" style="color: white"><button class="btn btn-primary btn-lg" data-toggle="modal" style="width: 100px;height: 30px;font-size: 14px;line-height: 0px">添加新账号</button></a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -28,8 +29,9 @@
                   <th style="text-align: center;">联系人电话</th>
                   <th style="text-align: center;">操作</th>
                 </tr>
-                </thead>
+                </thead>                
                 <tbody>
+
                 </tbody>
               </table>
             </div>

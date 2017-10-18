@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -121,6 +122,8 @@ public class AdminTilesController {
         return "admin_tongzhi1.page";
     }
 
+    // 删除内容需要权限
+    @RequiresPermissions(value = { "delete" })
     @RequestMapping("/admin_delete")
     public String admin_delete(HttpServletRequest req) {
         // 获取id
@@ -255,9 +258,11 @@ public class AdminTilesController {
         return "admin_index.page";
     }
 
+    // 显示内容需要权限
+    @RequiresPermissions(value = { "select" })
     @RequestMapping("/admin_userDsh")
     public String dshCompanyinfo(Model model) {
-
+        // 显示待审核账户
         List<Companyinfo> lists = companyinfo.selectAllCompanies();
         model.addAttribute("menus", "5");
         model.addAttribute("lists", lists);
@@ -267,7 +272,6 @@ public class AdminTilesController {
 
     @RequestMapping("/admin_userMan")
     public String userMan(Model model) {
-
         List<Companyinfo> lists = companyinfo.selectAllCompanies();
         model.addAttribute("menus", "4");
         model.addAttribute("lists", lists);
@@ -280,6 +284,14 @@ public class AdminTilesController {
     public String admin_uppassword(Model model) {
         model.addAttribute("checks", "geren2");
         return "admin_pass.page";
+    }
+
+    // 后台添加管理员
+    @RequiresPermissions(value = { "add" })
+    @RequestMapping("/admin_addUsers")
+    public String admin_addUser(Model model) {
+        // model.addAttribute("checks", "geren2");
+        return "redirect:/admRegister.jsp";
     }
 
     @RequestMapping("/admin_selects")
