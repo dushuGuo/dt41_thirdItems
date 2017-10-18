@@ -58,6 +58,5 @@
 	</bean>
 	<!-- 事务注解驱动 -->
 	<tx:annotation-driven transaction-manager="transactionManager"
-		proxy-target-class="true" />
-	
+		proxy-target-class="true" />	
 </beans>
