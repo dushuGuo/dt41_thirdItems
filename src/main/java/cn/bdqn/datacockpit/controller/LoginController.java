@@ -106,8 +106,6 @@ public class LoginController {
         List<Map<String, Object>> lists = new ArrayList<Map<String, Object>>();
         Companyinfo compi = companyinfo.selectByPhoneOrEmail(phone);
         Userinfo ui = userinfo.getByPhoneOrEmail(phone);
-        System.err.println(compi);
-        System.err.println(ui);
         // 从session获取验证码方法中存入的验证码
         String trueCode = (String) session.getAttribute("code");
         // 对比验证码
@@ -193,7 +191,6 @@ public class LoginController {
         if (flag >= 1) {
             return "front/shenqing.jsp";
         }
-
         return "front/error.jsp";
     }
 
@@ -246,9 +243,8 @@ public class LoginController {
     }
 
     /**
-     * 修改密码
+     * 修改密码 lllllll[[[
      * 
-     * @param company
      * @return
      */
     @RequestMapping("/updatePassword1")

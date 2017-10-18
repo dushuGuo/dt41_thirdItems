@@ -1,6 +1,7 @@
 package cn.bdqn.datacockpit.mapper;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cn.bdqn.datacockpit.entity.Userinfo;
@@ -31,6 +32,11 @@ public interface UserinfoMapper {
      * @return
      */
     public Userinfo getByPhoneOrEmail(String phone);
+
+    // 利用邮箱或者手机号取出对应手机号信息
+    String selectByPanduan(String phone);
+
+    List<Map<String, Object>> selectByPhone(String phone);
 
     /**
      * shiro通过电话号查询角色信息

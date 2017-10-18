@@ -250,11 +250,14 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
+		
+		<!-- shiro核心jar -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-spring</artifactId>
 			<version>${shiro.version}</version>
 		</dependency>
+		
 		<!-- excel分析 -->
 		<dependency>
 		    <groupId>org.apache.poi</groupId>

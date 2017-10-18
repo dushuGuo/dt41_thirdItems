@@ -19,14 +19,15 @@
 				<div class="small-box bg-red" style="width: 300px;margin-left:30px">
 					<div class="inner">
 						<h3>新增用户</h3>
-
 						<h5>New Users</h5>
 					</div>
 					<div class="icon">
 						<img src="resource/images/11.png" />
 					</div>
-					<a href="./admRegister.jsp" class="small-box-footer">More info <i
+					<a href="admin_addUsers.shtml" class="small-box-footer">More info <i
 						class="fa fa-arrow-circle-right"></i></a>
+					<!-- <a href="./admRegister.jsp" class="small-box-footer">More info <i
+						class="fa fa-arrow-circle-right"></i></a> -->
 				</div>
 			</div>
 			<!-- ./col -->
