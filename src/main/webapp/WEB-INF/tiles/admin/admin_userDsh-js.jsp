@@ -10,14 +10,14 @@
 	    		  return JSON.stringify(d);
 	    	  }
 	      },
-	      "columns" :[
+	       "columns" :[
 	    	  {"data": "office","defaultContent": "1"},
 	    	  {"data":"phone"},
 	    	  {"data":"corpname"},
 	    	  {"data":"name"},
 	    	  {"data":"job"},
 	    	  {"data":"email"},                  
-	                  ],
+	                  ], 
 	      "columnDefs": [
 					{
 	    		    "targets": 6,

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd 
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<!-- 自动扫描 -->
+	<context:component-scan base-package="cn.bdqn.datacockpit"></context:component-scan>
+
+	<!-- 自定义Realm -->
+	<bean id="myRealm" class="cn.bdqn.datacockpit.realm.MyRealm">
+		<property name="credentialsMatcher" ref="credentialsMatcher"></property>
+	</bean>
+
+	<!-- shiro安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm" />
+	</bean>
+
+	<!-- shiro核心 -->
+	<bean id="ShiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+
+		<property name="loginUrl" value="/login.jsp" />
+
+		<property name="unauthorizedUrl" value="/login.jsp" />
+
+		<property name="filterChainDefinitions">
+			<value>
+				<!--可以匿名访问 -->
+				/login.jsp=anon
+				/login.shtml=anon
+				/login2.shtml=anon
+				/pages/register.jsp=anon
+				/pages/wangjimima.jsp=anon
+				/pages/yonghuxieyi.jsp=anon
+				/getYzm=anon
+				<!-- *.shtml=anon -->
+				/getYzm.shtml=anon
+				<!-- js文件，css文件，images图片可以之间访问 -->
+				/bower_components/**=anon
+				/build/**=anon
+				/dist/**=anon
+				/plugins/**=anon
+				/resource/**=anon
+			    <!-- 其他都需要权限 -->
+                /**=authc        
+			</value>
+		</property>
+	</bean>
+
+	<!-- shiro注解 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor" />
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+
+	<!-- 凭证匹配器 -->
+	<bean id="credentialsMatcher"
+		class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+		<!-- 散列算法名称 -->
+		<property name="hashAlgorithmName" value="md5"></property>
+		<!-- 散列次数 -->
+		<property name="hashIterations" value="2"></property>
+	</bean>
+</beans>
