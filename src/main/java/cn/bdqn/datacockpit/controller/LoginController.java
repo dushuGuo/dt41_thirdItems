@@ -64,8 +64,7 @@ public class LoginController {
 
     // 验证码
     @RequestMapping(value = "getYzm")
-    public @ResponseBody
-    List<String> getYzm(HttpServletResponse response, HttpServletRequest request) {
+    public @ResponseBody List<String> getYzm(HttpServletResponse response, HttpServletRequest request) {
 
         List<String> lists = new ArrayList<String>();
         try {
@@ -111,7 +110,7 @@ public class LoginController {
         // 从session获取验证码方法中存入的验证码
         String trueCode = (String) session.getAttribute("code");
         // 对比验证码
-        if (!trueCode.equals(code2)) {
+        if (!trueCode.equalsIgnoreCase(code2)) {
             // 验证码不正确则返回不正确
             req.setAttribute("erroMessage", "*验证码不正确");
         }
@@ -152,7 +151,7 @@ public class LoginController {
     public String login(Userinfo user, String code2, HttpSession session, HttpServletRequest request) {
         // 首先判断验证码是否正确
         String trueCode = (String) session.getAttribute("code");
-        if (!code2.equals(trueCode)) {
+        if (!code2.equalsIgnoreCase(trueCode)) {
             session.setAttribute("erroMessage", "*验证码错误！");
             return "redirect:/login.jsp";
         }
