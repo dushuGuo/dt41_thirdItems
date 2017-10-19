@@ -116,13 +116,13 @@
 
 <script>
 $("#v_container").find("img").click(function(){
-var $img=	$(this);
-	$(this).attr("src","");
-	$.post("getYzm.shtml", function(data) {
-		$img.attr("src","getYzm.shtml") 
+	var $img = $(this);
+		$(this).attr("src", "");
+		$.post("getYzm.shtml", function(data) {
+			$img.attr("src", "getYzm.shtml")
 		});
-})
-  </script>
+	})
+</script>
 
 
 </body>

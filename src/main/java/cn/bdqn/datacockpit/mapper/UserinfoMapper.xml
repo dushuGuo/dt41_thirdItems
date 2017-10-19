@@ -56,7 +56,7 @@
 		select
 		id, name, job,
 		phone, email, state
-		from userinfo
+		from userinfo where id !=1
 	</select>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"

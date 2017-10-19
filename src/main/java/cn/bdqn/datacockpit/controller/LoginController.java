@@ -189,6 +189,10 @@ public class LoginController {
         // md5.toHex();
         // 存储到用户中去
         cominfo.setPassword(md5PassWord);
+        // 注册后默认待审核状态2
+        cominfo.setApproval(2);
+        // 未审核通过前默认为0，禁用状态
+        cominfo.setState(0);
         int flag = companyinfo.insert(cominfo);
         if (flag >= 1) {
             return "front/shenqing.jsp";
@@ -245,7 +249,7 @@ public class LoginController {
     }
 
     /**
-     * 修改密码 lllllll[[[
+     * 修改密码
      * 
      * @return
      */
