@@ -41,7 +41,7 @@
    		  	   }).draw();		
   })
   
-  
+/* 有删除权限才显示 */    
 </script>
 <<shiro:hasPermission name="delete">
 <script language="jscript"> 

@@ -37,6 +37,7 @@ import cn.bdqn.datacockpit.service.ResultService;
 import cn.bdqn.datacockpit.service.TablecolumninfoService;
 import cn.bdqn.datacockpit.service.TableinfoService;
 import cn.bdqn.datacockpit.service.UserinfoService;
+import cn.bdqn.datacockpit.service.impl.UserRoleServiceImpl;
 import cn.bdqn.datacockpit.utils.ChineseToPinYin;
 import cn.bdqn.datacockpit.utils.JdbcUtil;
 
@@ -50,6 +51,9 @@ public class AdminTilesController {
 
     @Autowired
     private InfoService is;
+
+    @Autowired
+    private UserRoleServiceImpl userRoleServiceImpl;
 
     @Autowired
     private CompanyinfoService companyinfo;
@@ -128,7 +132,10 @@ public class AdminTilesController {
     public String admin_delete(HttpServletRequest req) {
         // 获取id
         Integer id = Integer.parseInt(req.getParameter("id"));
+        // 删除管理员
         us.deleteByPrimaryKey(id);
+        // 删除管理员角色表中的对应数据
+        userRoleServiceImpl.deleteByUid(id);
         return "admin_shuju4.page";
     }
 
