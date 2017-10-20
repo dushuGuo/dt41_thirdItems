@@ -68,8 +68,8 @@
       </div>
 		 <div class="col-xs-8">
           <div class="checkbox icheck" style="margin-left:10px">
-            <label>
-              <input type="checkbox" name="onLine" value="3"> <span style="color:#272822">下次自动登录</span>
+            <label><!-- name="onLine" -->
+              <input type="checkbox" name="rememberMe" value="3"> <span style="color:#272822">下次自动登录</span>
             	<div><span style="color:yellow">${erroMessage} </span></div>
             </label>
           </div>   
