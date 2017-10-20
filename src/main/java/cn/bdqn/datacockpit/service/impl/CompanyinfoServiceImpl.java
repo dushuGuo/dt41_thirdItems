@@ -119,4 +119,13 @@ public class CompanyinfoServiceImpl implements CompanyinfoService {
         return companyinfo.selectAllCompaniesByApproval();
     }
 
+    /**
+     * 根据email查注册邮箱是否存在
+     */
+    @Override
+    public int selectEmailNum(String email) {
+
+        return companyinfo.selectEmailNum(email);
+    }
+
 }

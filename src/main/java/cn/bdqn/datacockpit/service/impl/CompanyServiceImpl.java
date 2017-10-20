@@ -14,11 +14,22 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Autowired
     private CompanyMapper companyMapper;
-    
+
     public List<Company> selectAllCompanies() {
-        
+
         return companyMapper.selectAllCompanies();
     }
-    
-    
+
+    @Override
+    public int selectCompany(String compname) {
+
+        return companyMapper.selectCompany(compname);
+    }
+
+    @Override
+    public int insertCompany(String compname) {
+
+        return companyMapper.insertCompany(compname);
+    }
+
 }

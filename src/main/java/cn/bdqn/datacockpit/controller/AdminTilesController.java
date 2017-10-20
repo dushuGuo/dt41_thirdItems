@@ -2,7 +2,6 @@ package cn.bdqn.datacockpit.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +28,7 @@ import cn.bdqn.datacockpit.entity.Result;
 import cn.bdqn.datacockpit.entity.Tablecolumninfo;
 import cn.bdqn.datacockpit.entity.Tableinfo;
 import cn.bdqn.datacockpit.entity.Userinfo;
+import cn.bdqn.datacockpit.service.AdminTilesService;
 import cn.bdqn.datacockpit.service.AnalysistasksService;
 import cn.bdqn.datacockpit.service.CompanyinfoService;
 import cn.bdqn.datacockpit.service.DatarelationService;
@@ -69,6 +69,9 @@ public class AdminTilesController {
 
     @Autowired
     private TablecolumninfoService tcs;
+
+    @Autowired
+    private AdminTilesService adminTilesService;
 
     @RequestMapping("/admin_index")
     public String index(Model model) {
@@ -395,30 +398,7 @@ public class AdminTilesController {
         String No1Id = (String) req.getSession().getAttribute("No1");
         String[] attr = id.split(",");
         ChineseToPinYin ctp = new ChineseToPinYin();
-        Map<String, Object> map = new HashMap<String, Object>();
-        Map<String, Object> mapChina = new HashMap<String, Object>();
-        String tbName = null;
-        for (int i = 0; i < attr.length; i++) {
-            if (i == 0) {
-                // 存图形id
-                map.put("shows", attr[0]);
-            } else if (i == 1) {
-                HttpSession session = req.getSession();
-                // 拼接新建表名为用户id+表明（防止重名）
-                tbName = No1Id + ctp.getPingYin(attr[1]);
-            } else if (2 * i - 1 <= attr.length) {
-                // 存 字段名 和 字段类型
-                map.put(ctp.getPingYin(attr[2 * i - 2]), attr[2 * i - 1]);
-                mapChina.put(ctp.getPingYin(attr[2 * i - 2]), attr[2 * i - 2]);
-            }
-        }
-
-        JdbcUtil creats = new JdbcUtil();
-        ApplicationContext context = creats.getContext();
-        context = new ClassPathXmlApplicationContext("spring-common.xml");
-        JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
-        creats.createTable(jt, tbName, map, mapChina);
-
+        String tbName = No1Id + ctp.getPingYin(attr[1]);
         Date dt = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String date = sdf.format(dt);
@@ -432,10 +412,10 @@ public class AdminTilesController {
         Integer cid = Integer.parseInt(ids);
         record.setCid(cid);
         ts.insert(record);
+        Tableinfo tableinfo = ts.selectPrimaryKey(record);
 
-        Map<String, String> maps = new HashMap<String, String>();
-        maps.put("flag", "1");
-        return maps;
+        return adminTilesService.creats(attr, No1Id, req, tbName, tableinfo);
+
     }
 
     /**

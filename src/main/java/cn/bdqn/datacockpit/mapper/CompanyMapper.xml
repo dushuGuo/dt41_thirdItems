@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.bdqn.datacockpit.mapper.CompanyMapper">
-
 <select id="selectAllCompanies" resultType="cn.bdqn.datacockpit.entity.Company">
     SELECT
       id,
@@ -11,5 +10,12 @@
       company
     WHERE state = 1
 </select>
-
+<select id="selectCompany" resultType="Integer" parameterType="java.lang.String" >
+    select count(*) num from company where compname = #{compname,jdbcType=VARCHAR}
+  </select>
+<insert id="insertCompany" parameterType="java.lang.String">
+insert into company (compname)
+		values (#{compname,jdbcType=VARCHAR}
+		)
+</insert>
 </mapper>

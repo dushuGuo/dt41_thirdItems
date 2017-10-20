@@ -11,7 +11,7 @@
        http://www.springframework.org/schema/tx/spring-tx.xsd">    
 	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
 	<context:component-scan
-		base-package="cn.bdqn.datacockpit.service.impl,cn.bdqn.datacockpit.utils" />
+		base-package="cn.bdqn.datacockpit.service.impl,cn.bdqn.datacockpit.utils,cn.bdqn.datacockpit.entity" />
 
 	<!-- JDBC操作模板 -->
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">

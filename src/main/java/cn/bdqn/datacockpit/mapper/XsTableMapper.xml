@@ -135,4 +135,14 @@
   SELECT COUNT(*) FROM information_schema.`COLUMNS`  WHERE TABLE_SCHEMA='dt40_team0_db'  AND TABLE_NAME=#{tableName };
   
   </select>
+  <select id="getColumnName" parameterType="String" resultType="java.util.List">
+  
+  SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.Columns WHERE table_name=#{tableName} AND TABLE_SCHEMA='datacockpit40';
+  
+  </select>
+   <select id="getColumnType" parameterType="String" resultType="java.util.List">
+  
+  SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.Columns WHERE table_name=#{tableName} AND TABLE_SCHEMA='datacockpit40';
+  
+  </select>
 </mapper>

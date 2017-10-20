@@ -18,8 +18,34 @@ public interface XsTableMapper {
     int updateByPrimaryKeySelective(XsTable record);
 
     int updateByPrimaryKey(XsTable record);
-    
-    int getTableList(String tableName);
-      
 
+    /**
+     * 
+     * Description: 查询表中多少字段<br/>
+     *
+     * @author huMZ
+     * @param tableName
+     * @return
+     */
+    int getTableList(String tableName);
+
+    /**
+     * 
+     * Description: 查询表字段类型<br/>
+     *
+     * @author huMZ
+     * @param tableName
+     * @return
+     */
+    List<String> getColumnType(String tableName);
+
+    /**
+     * 
+     * Description: 查询表字段名<br/>
+     *
+     * @author huMZ
+     * @param tableName
+     * @return
+     */
+    List<String> getColumnName(String tableName);
 }

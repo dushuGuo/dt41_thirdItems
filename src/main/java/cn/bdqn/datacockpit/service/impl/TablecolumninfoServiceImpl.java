@@ -5,7 +5,7 @@
  * Date:2017年8月25日上午11:48:50
  * Copyright (c) 2017, bluemobi All Rights Reserved.
  *
-*/
+ */
 
 package cn.bdqn.datacockpit.service.impl;
 
@@ -19,67 +19,65 @@ import cn.bdqn.datacockpit.mapper.TablecolumninfoMapper;
 import cn.bdqn.datacockpit.service.TablecolumninfoService;
 
 /**
- * Description:	   <br/>
- * Date:     2017年8月25日 上午11:48:50 <br/>
- * @author   caoS
- * @version  
- * @see 	 
+ * Description: <br/>
+ * Date: 2017年8月25日 上午11:48:50 <br/>
+ * 
+ * @author caoS
+ * @version
+ * @see
  */
 @Service
 public class TablecolumninfoServiceImpl implements TablecolumninfoService {
-    
+
     @Autowired
-    TablecolumninfoMapper tablecolumninfo;
-    
+    TablecolumninfoMapper tablecolumninfoMapper;
+
     @Override
     public List<Tablecolumninfo> selectAllTablecolumninfo() {
-        return tablecolumninfo.selectAllTablecolumninfo();
+        return tablecolumninfoMapper.selectAllTablecolumninfo();
     }
 
     @Override
     public int deleteByPrimaryKey(Integer id) {
-        int flag=tablecolumninfo.deleteByPrimaryKey(id);
+        int flag = tablecolumninfoMapper.deleteByPrimaryKey(id);
         return flag;
     }
 
     @Override
     public int insert(Tablecolumninfo record) {
-        int flag=tablecolumninfo.insert(record);
+        int flag = tablecolumninfoMapper.insert(record);
         return flag;
     }
 
     @Override
     public int insertSelective(Tablecolumninfo record) {
-        int flag=tablecolumninfo.insertSelective(record);
+        int flag = tablecolumninfoMapper.insertSelective(record);
         return flag;
     }
 
     @Override
     public Tablecolumninfo selectByPrimaryKey(Integer id) {
-        return tablecolumninfo.selectByPrimaryKey(id);
+        return tablecolumninfoMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public int updateByPrimaryKeySelective(Tablecolumninfo record) {
-        int flag=tablecolumninfo.updateByPrimaryKeySelective(record);
+        int flag = tablecolumninfoMapper.updateByPrimaryKeySelective(record);
         return flag;
     }
 
     @Override
     public int updateByPrimaryKey(Tablecolumninfo record) {
-        int flag=tablecolumninfo.updateByPrimaryKey(record);
+        int flag = tablecolumninfoMapper.updateByPrimaryKey(record);
         return flag;
     }
-    
+
     /**
      * 增加方法
      */
-	@Override
-	public List<Tablecolumninfo> selectView(String tableName) {
-		return tablecolumninfo.selectView(tableName);
-	}
-
-   
+    @Override
+    public List<Tablecolumninfo> selectView(String tableName) {
+        return tablecolumninfoMapper.selectView(tableName);
+    }
 
 }
-
