@@ -37,6 +37,7 @@ import cn.bdqn.datacockpit.service.ResultService;
 import cn.bdqn.datacockpit.service.TablecolumninfoService;
 import cn.bdqn.datacockpit.service.TableinfoService;
 import cn.bdqn.datacockpit.service.UserinfoService;
+import cn.bdqn.datacockpit.service.impl.UserRoleServiceImpl;
 import cn.bdqn.datacockpit.utils.ChineseToPinYin;
 import cn.bdqn.datacockpit.utils.JdbcUtil;
 
@@ -50,6 +51,9 @@ public class AdminTilesController {
 
     @Autowired
     private InfoService is;
+
+    @Autowired
+    private UserRoleServiceImpl userRoleServiceImpl;
 
     @Autowired
     private CompanyinfoService companyinfo;
@@ -131,7 +135,10 @@ public class AdminTilesController {
     public String admin_delete(HttpServletRequest req) {
         // 获取id
         Integer id = Integer.parseInt(req.getParameter("id"));
+        // 删除管理员
         us.deleteByPrimaryKey(id);
+        // 删除管理员角色表中的对应数据
+        userRoleServiceImpl.deleteByUid(id);
         return "admin_shuju4.page";
     }
 
@@ -261,9 +268,11 @@ public class AdminTilesController {
         return "admin_index.page";
     }
 
+    // 显示内容需要权限
+    @RequiresPermissions(value = { "select" })
     @RequestMapping("/admin_userDsh")
     public String dshCompanyinfo(Model model) {
-
+        // 显示待审核账户
         List<Companyinfo> lists = companyinfo.selectAllCompanies();
         model.addAttribute("menus", "5");
         model.addAttribute("lists", lists);
@@ -273,7 +282,6 @@ public class AdminTilesController {
 
     @RequestMapping("/admin_userMan")
     public String userMan(Model model) {
-
         List<Companyinfo> lists = companyinfo.selectAllCompanies();
         model.addAttribute("menus", "4");
         model.addAttribute("lists", lists);
@@ -286,6 +294,14 @@ public class AdminTilesController {
     public String admin_uppassword(Model model) {
         model.addAttribute("checks", "geren2");
         return "admin_pass.page";
+    }
+
+    // 后台添加管理员
+    @RequiresPermissions(value = { "add" })
+    @RequestMapping("/admin_addUsers")
+    public String admin_addUser(Model model) {
+        // model.addAttribute("checks", "geren2");
+        return "redirect:/admRegister.jsp";
     }
 
     @RequestMapping("/admin_selects")

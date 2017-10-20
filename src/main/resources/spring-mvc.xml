@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/aop 
+       		http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	
+
 	<!-- 自动扫描包 -->
 	<context:component-scan base-package="cn.bdqn.datacockpit.controller" />
-	
+
 	<!-- springMVC注解驱动 -->
-	<mvc:annotation-driven >
-		 <!-- <mvc:argument-resolvers>
-            <bean class="cn.bdqn.datacockpit.datatable.SeacherConditionArgumentResolver"/>
-        </mvc:argument-resolvers> -->
+	<mvc:annotation-driven>
+		<!-- <mvc:argument-resolvers> <bean class="cn.bdqn.datacockpit.datatable.SeacherConditionArgumentResolver"/> 
+			</mvc:argument-resolvers> -->
 	</mvc:annotation-driven>
 
 	<!-- 引入tiles配置文件 -->
-	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer" >
+	<bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
 		<property name="definitions">
 			<list>
 				<value>/WEB-INF/tiles.xml</value>
@@ -25,8 +27,12 @@
 		</property>
 	</bean>
 
+	<!-- 异常类 -->
+	<bean id="globalException" class="cn.bdqn.datacockpit.exception.GlobalException"></bean>
+
 	<!-- 配置视图解析器 -->
-	<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	<bean id="tilesViewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="viewClass">
 			<value>org.springframework.web.servlet.view.tiles3.TilesView</value>
 		</property>
@@ -40,9 +46,10 @@
 		<!-- 后缀 -->
 		<property name="suffix" value="" />
 	</bean>
-	
-<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+
+	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="messageConverters">
 			<list>
 				<bean id="mappingJacksonHttpMessageConverter"
@@ -58,5 +65,12 @@
 			</list>
 		</property>
 	</bean>
-	
+	<!-- 核心注解 -->
+	<aop:config proxy-target-class="true"></aop:config>
+
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+
 </beans>

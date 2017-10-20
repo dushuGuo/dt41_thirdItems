@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>
 <!-- page script -->
 <script>
   $(function () {
@@ -35,19 +36,20 @@
    		              search: 'applied',
    		              order: 'applied',
    		        }).nodes().each(function(cell, i) {
-   		              cell.innerHTML = i + 1;
-   		  	  
+   		              cell.innerHTML = i + 1; 		  	  
    		  	   })        	 	
    		  	   }).draw();		
   })
   
-  
+/* 有删除权限才显示 */    
 </script>
+<<shiro:hasPermission name="delete">
 <script language="jscript"> 
 	function dd() { if(confirm("请确认是否删除！" )) return true; return false;  }
-</script> 
+</script>
+</shiro:hasPermission>
 <!-- <script type="text/javascript">
-   	function pop(){
+   	function pop()sssaa{
    	  $(".delete_btn").attr("data-toggle","modal");
       $(".delete_btn").attr("data-target","#myModal")
       $(".delete_btn").attr("id","identifier");

@@ -10,6 +10,7 @@
 package cn.bdqn.datacockpit.service.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,18 @@ public class UserinfoServiceImpl implements UserinfoService {
     @Override
     public Set<String> getPermissions(String phone) {
         return userinfoMapper.getPermissions(phone);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectByPhone(String phone) {
+
+        return userinfoMapper.selectByPhone(phone);
+    }
+
+    @Override
+    public String selectByPanduan(String phone) {
+
+        return userinfoMapper.selectByPanduan(phone);
     }
 
 }

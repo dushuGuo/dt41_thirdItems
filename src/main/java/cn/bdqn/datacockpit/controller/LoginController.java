@@ -65,6 +65,7 @@ public class LoginController {
     // 验证码
     @RequestMapping(value = "getYzm")
     public @ResponseBody List<String> getYzm(HttpServletResponse response, HttpServletRequest request) {
+
         List<String> lists = new ArrayList<String>();
         try {
             response.setHeader("Pragma", "No-cache");
@@ -106,12 +107,10 @@ public class LoginController {
         List<Map<String, Object>> lists = new ArrayList<Map<String, Object>>();
         Companyinfo compi = companyinfo.selectByPhoneOrEmail(phone);
         Userinfo ui = userinfo.getByPhoneOrEmail(phone);
-        System.err.println(compi);
-        System.err.println(ui);
         // 从session获取验证码方法中存入的验证码
         String trueCode = (String) session.getAttribute("code");
         // 对比验证码
-        if (!trueCode.equals(code2)) {
+        if (!trueCode.equalsIgnoreCase(code2)) {
             // 验证码不正确则返回不正确
             req.setAttribute("erroMessage", "*验证码不正确");
         }
@@ -152,11 +151,12 @@ public class LoginController {
     public String login(Userinfo user, String code2, HttpSession session, HttpServletRequest request) {
         // 首先判断验证码是否正确
         String trueCode = (String) session.getAttribute("code");
-        if (!code2.equals(trueCode)) {
+        if (!code2.equalsIgnoreCase(trueCode)) {
             session.setAttribute("erroMessage", "*验证码错误！");
             return "redirect:/login.jsp";
         }
         Subject subject = SecurityUtils.getSubject();
+
         UsernamePasswordToken token = new UsernamePasswordToken(user.getPhone(), user.getPassword());
         try {
             subject.login(token);
@@ -189,11 +189,14 @@ public class LoginController {
         // md5.toHex();
         // 存储到用户中去
         cominfo.setPassword(md5PassWord);
+        // 注册后默认待审核状态2
+        cominfo.setApproval(2);
+        // 未审核通过前默认为0，禁用状态
+        cominfo.setState(0);
         int flag = companyinfo.insert(cominfo);
         if (flag >= 1) {
             return "front/shenqing.jsp";
         }
-
         return "front/error.jsp";
     }
 
@@ -248,7 +251,6 @@ public class LoginController {
     /**
      * 修改密码
      * 
-     * @param company
      * @return
      */
     @RequestMapping("/updatePassword1")
@@ -302,6 +304,7 @@ public class LoginController {
     @RequestMapping("/gongGao")
     public String gongGao(Integer id, Model model) {
         // System.out.println(id);
+
         Info info = infoService.selectByPrimaryKey(id);
         model.addAttribute("gg", info);
         return "user_gongGao.pages";
