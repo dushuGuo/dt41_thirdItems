@@ -46,7 +46,7 @@
 	height: 40px;
 	position: absolute;
 	top: 300px;
-	left: 510px;
+	left: 545px;
 	index: 1000;
 	font-style: italic;
 	text-align: center;

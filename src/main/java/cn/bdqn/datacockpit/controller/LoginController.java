@@ -38,6 +38,7 @@ import cn.bdqn.datacockpit.service.CompanyService;
 import cn.bdqn.datacockpit.service.CompanyinfoService;
 import cn.bdqn.datacockpit.service.InfoService;
 import cn.bdqn.datacockpit.service.UserinfoService;
+import cn.bdqn.datacockpit.utils.Assert;
 import cn.bdqn.datacockpit.utils.LoggerUtils;
 import cn.bdqn.datacockpit.utils.VerifyCodeUtils;
 
@@ -182,74 +183,69 @@ public class LoginController {
      * @return
      * @throws Exception
      */
-    /*
-     * @RequestMapping("/register") public String register1(Companyinfo cominfo,
-     * HttpServletRequest req) { String msg = "5"; try {
-     * 
-     * String regex = "^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";// 手机号的的正则
-     * String regex1 =
-     * "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$"
-     * ;// 邮箱的正则
-     * 
-     * Boolean phoneFlag = cominfo.getPhone().matches(regex); Boolean emailFlag
-     * = cominfo.getEmail().matches(regex1);
-     * 
-     * Assert.isTrue(phoneFlag, "手机号输入不正确");
-     * 
-     * Assert.isTrue(emailFlag, "邮箱输入不正确");
-     * 
-     * Assert.isTrue(companyinfo.selectPhoneNum(cominfo.getPhone()) <= 0,
-     * "手机号已存在");
-     * 
-     * Assert.isTrue(companyinfo.selectEmailNum(cominfo.getEmail()) <= 0,
-     * "邮箱已存在");
-     * 
-     * // 获取原始密码 String password = cominfo.getPassword(); // 加密盐 String salt =
-     * cominfo.getEmail(); // MD5方式加密，加密次数和配置文件中保持一致 Md5Hash md5 = new
-     * Md5Hash(password, salt, 2); // 加密后 String md5PassWord = md5.toHex(); //
-     * md5.toHex(); // 存储到用户中去 cominfo.setPassword(md5PassWord);
-     * 
-     * int flag = companyinfo.insert(cominfo); if (flag >= 1) {
-     * 
-     * if (company.selectCompany(cominfo.getCorpname()) <= 0) {
-     * 
-     * if (company.insertCompany(cominfo.getCorpname()) >= 1) { return
-     * "front/shenqing.jsp"; } } return "front/shenqing.jsp"; } else {
-     * req.getSession().setAttribute("error", "可能网速不给力，注册失败"); return
-     * "redirect:pages/register.jsp";
-     * 
-     * } } catch (Exception e) {
-     * 
-     * if (e.getMessage() != null) {
-     * 
-     * req.getSession().setAttribute("error", e.getMessage()); msg = "0";
-     * req.setAttribute("msg", msg);
-     * 
-     * } e.printStackTrace(); } }
-     */
-
     @RequestMapping("/register")
-    public String register(Companyinfo cominfo) {
-        // 获取原始密码
-        String password = cominfo.getPassword();
-        // 加密盐
-        String salt = cominfo.getEmail();
-        // MD5方式加密，加密次数和配置文件中保持一致
-        Md5Hash md5 = new Md5Hash(password, salt, 2);
-        // 加密后
-        String md5PassWord = md5.toHex();
-        // md5.toHex();
-        // 存储到用户中去
-        cominfo.setPassword(md5PassWord);
-        // 注册后默认待审核状态2
-        cominfo.setApproval(2);
-        // 未审核通过前默认为0，禁用状态
-        cominfo.setState(0);
-        int flag = companyinfo.insert(cominfo);
-        if (flag >= 1) {
-            return "front/shenqing.jsp";
+    public String register(Companyinfo cominfo, HttpServletRequest req) {
+        String msg = "5";
+        try {
+
+            String regex = "^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";// 手机号的的正则
+            String regex1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";// 邮箱的正则
+
+            Boolean phoneFlag = cominfo.getPhone().matches(regex);
+            Boolean emailFlag = cominfo.getEmail().matches(regex1);
+            // 断言判断手机号是否输入正确，不存在则把错误信息存在异常中去
+            Assert.isTrue(phoneFlag, "手机号输入不正确");
+
+            Assert.isTrue(emailFlag, "邮箱输入不正确");
+
+            Assert.isTrue(companyinfo.selectPhoneNum(cominfo.getPhone()) <= 0, "手机号已存在");
+
+            Assert.isTrue(companyinfo.selectEmailNum(cominfo.getEmail()) <= 0, "邮箱已存在");
+
+            // 获取原始密码
+            String password = cominfo.getPassword();
+            // 加密盐
+            String salt = cominfo.getEmail();
+            // MD5方式加密，加密次数和配置文件中保持一致
+            Md5Hash md5 = new Md5Hash(password, salt, 2);
+            // 加密后
+            String md5PassWord = md5.toHex();
+            // md5.toHex();
+            // 存储到用户中去
+            cominfo.setPassword(md5PassWord);
+            // 注册后默认待审核状态2
+            cominfo.setApproval(2);
+            // 未审核通过前默认为0，禁用状态
+            cominfo.setState(0);
+            int flag = companyinfo.insert(cominfo);
+            if (flag >= 1) {
+                // 查找注册公司在company表中是否存在，不存在则添加进去
+                if (company.selectCompany(cominfo.getCorpname()) <= 0) {
+
+                    if (company.insertCompany(cominfo.getCorpname()) >= 1) {
+                        return "front/shenqing.jsp";
+                    }
+                }
+                return "front/shenqing.jsp";
+            } else {
+                req.getSession().setAttribute("error", "可能网速不给力，注册失败");
+                return "redirect:pages/register.jsp";
+
+            }
+        } catch (Exception e) {
+
+            if (e.getMessage() != null) {
+
+                req.getSession().setAttribute("error", e.getMessage());
+                // 标识符,是否有异常,0为有,其他都为没有
+                msg = "0";
+                req.setAttribute("msg", msg);
+
+            }
+            e.printStackTrace();
+            return "front/register.jsp";
         }
-        return "front/register.jsp";
+
     }
 
     /**
@@ -306,7 +302,18 @@ public class LoginController {
      * @return
      */
     @RequestMapping("/updatePassword1")
-    public String updatePassword1(Companyinfo company) {
+    public String updatePassword1(Companyinfo company, HttpServletRequest req) {
+        // 获取原始密码
+        String password = company.getPassword();
+        // 加密盐
+        String salt = ((Companyinfo) req.getSession().getAttribute("infos")).getEmail();
+        // MD5方式加密，加密次数和配置文件中保持一致
+        Md5Hash md5 = new Md5Hash(password, salt, 2);
+        // 加密后
+        String md5PassWord = md5.toHex();
+        // md5.toHex();
+        // 存储到用户中去
+        company.setPassword(md5PassWord);
         int flag = companyinfo.updateByPrimaryKeySelective(company);
         if (flag >= 1) {
             return "redirect:/user_index.shtml";
