@@ -44,6 +44,9 @@
 				/pages/wangjimima.jsp=anon
 				/pages/yonghuxieyi.jsp=anon
 				/getYzm=anon
+				/register.shtml=anon
+				/testPhone.shtml=anon
+				/testEmail.shtml=anon
 				<!-- *.shtml=anon -->
 				/getYzm.shtml=anon
 				<!-- js文件，css文件，images图片可以之间访问 -->

@@ -47,6 +47,9 @@
     <select id="selectPhoneNum" resultType="Integer" parameterType="java.lang.String" >
     select count(*) num from companyinfo where phone = #{phone,jdbcType=VARCHAR}
   </select>
+  <select id="selectEmailNum" resultType="Integer" parameterType="java.lang.String" >
+    select count(*) num from companyinfo where email = #{email,jdbcType=VARCHAR}
+  </select>
   
   <!-- wb -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

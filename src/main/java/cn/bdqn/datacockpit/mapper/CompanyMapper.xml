@@ -11,5 +11,12 @@
       company
     WHERE state = 1
 </select>
-
+<select id="selectCompany" resultType="Integer" parameterType="java.lang.String" >
+    select count(*) num from company where compname = #{compname,jdbcType=VARCHAR}
+  </select>
+<insert id="insertCompany" parameterType="java.lang.String">
+insert into company (compname)
+		values (#{compname,jdbcType=VARCHAR}
+		)
+</insert>
 </mapper>
