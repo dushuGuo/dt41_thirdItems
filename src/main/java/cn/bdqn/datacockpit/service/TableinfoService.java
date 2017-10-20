@@ -25,6 +25,8 @@ public interface TableinfoService {
     List<Tableinfo> selectAll(Integer id);
 
     int insert(Tableinfo record);
-    
+
     Tableinfo selectByPrimaryKey(Integer id);
+
+    Tableinfo selectPrimaryKey(Tableinfo record);
 }
