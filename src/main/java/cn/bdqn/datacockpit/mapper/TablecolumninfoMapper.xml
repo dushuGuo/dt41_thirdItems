@@ -30,6 +30,7 @@
     FROM INFORMATION_SCHEMA.COLUMNS
     WHERE table_name = #{tableName,jdbcType=VARCHAR}
   </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tablecolumninfo
     where id = #{id,jdbcType=INTEGER}

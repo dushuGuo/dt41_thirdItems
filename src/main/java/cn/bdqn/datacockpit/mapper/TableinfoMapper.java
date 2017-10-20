@@ -18,4 +18,6 @@ public interface TableinfoMapper {
     int updateByPrimaryKeySelective(Tableinfo record);
 
     int updateByPrimaryKey(Tableinfo record);
+
+    Tableinfo selectPrimaryKey(Tableinfo record);
 }

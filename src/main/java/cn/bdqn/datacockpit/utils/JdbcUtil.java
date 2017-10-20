@@ -102,28 +102,28 @@ public class JdbcUtil {
      * 
      * @param tableName
      */
-    public static int createTable(JdbcTemplate jt, String tableName, Map<String, Object> map,Map<String, Object> mapChina) {
+    public static int createTable(JdbcTemplate jt, String tableName, Map<String, Object> map,
+            Map<String, Object> mapChina) {
         StringBuffer sb = new StringBuffer("");
         sb.append("CREATE TABLE `" + tableName + "` (");
         sb.append(" `id` int(11) NOT NULL AUTO_INCREMENT ,");
         Set<String> set = map.keySet();
-      
+
         for (String key : set) {
-            
+
             if (key.equals("shows")) {
                 sb.append("`" + key + "` int(2) default " + map.get("shows") + ",");
-            } else 
-                if (map.get(key).equals("1")) {
-                sb.append("`" + key + "` varchar(255) COMMENT '"+mapChina.get(key)+"',");
+            } else if (map.get(key).equals("1")) {
+                sb.append("`" + key + "` varchar(255) COMMENT '" + mapChina.get(key) + "',");
             } else if (map.get(key).equals("3")) {
-                sb.append("`" + key + "` float  COMMENT '"+mapChina.get(key)+"',");
+                sb.append("`" + key + "` float  COMMENT '" + mapChina.get(key) + "',");
             } else if (map.get(key).equals("2")) {
-                sb.append("`" + key + "` int(10)  COMMENT '"+mapChina.get(key)+"',");
+                sb.append("`" + key + "` int(10)  COMMENT '" + mapChina.get(key) + "',");
             } else if (map.get(key).equals("0")) {
                 sb.append("`times` date ,");
             }
         }
-        //sb.append(" `tbName` varchar(255) DEFAULT '',");
+        // sb.append(" `tbName` varchar(255) DEFAULT '',");
         sb.append(" PRIMARY KEY (`id`))");
         try {
             jt.update(sb.toString());
@@ -133,7 +133,6 @@ public class JdbcUtil {
         }
         return 0;
     }
-
 
     /**
      * 查询数据库是否有某表
