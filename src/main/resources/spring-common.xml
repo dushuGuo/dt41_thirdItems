@@ -8,8 +8,7 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx
-       http://www.springframework.org/schema/tx/spring-tx.xsd">
-       
+       http://www.springframework.org/schema/tx/spring-tx.xsd">    
 	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
 	<context:component-scan
 		base-package="cn.bdqn.datacockpit.service.impl,cn.bdqn.datacockpit.utils,cn.bdqn.datacockpit.entity" />
