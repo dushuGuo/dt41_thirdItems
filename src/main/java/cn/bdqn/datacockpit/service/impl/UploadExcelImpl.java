@@ -13,12 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import cn.bdqn.datacockpit.mapper.XsTableMapper;
+import cn.bdqn.datacockpit.entity.Companyinfo;
+import cn.bdqn.datacockpit.entity.Tableinfo;
+import cn.bdqn.datacockpit.mapper.TablecolumninfoMapper;
+import cn.bdqn.datacockpit.mapper.TableinfoMapper;
 import cn.bdqn.datacockpit.utils.ChineseToPinYin;
 import cn.bdqn.datacockpit.utils.ImportExecl;
 
@@ -32,12 +37,18 @@ import cn.bdqn.datacockpit.utils.ImportExecl;
  */
 @Service
 public class UploadExcelImpl {
-    ImportExecl importExecl = new ImportExecl();
+    private ImportExecl importExecl = new ImportExecl();
 
-    ChineseToPinYin ctpYin = new ChineseToPinYin();
+    private ChineseToPinYin ctpYin = new ChineseToPinYin();
 
     @Autowired
-    private XsTableMapper xsTableMapper;
+    private TablecolumninfoMapper tablecolumninfoMapper;
+
+    @Autowired
+    private TableinfoMapper tableinfoMapper;
+
+    @Autowired
+    private Tableinfo tableinfo;
 
     /**
      * 
@@ -48,20 +59,43 @@ public class UploadExcelImpl {
      * @param formula
      * @throws Exception
      */
-    public String upload(MultipartFile file, FormulaEvaluator formula) throws Exception {
+    public String upload(HttpServletRequest request, MultipartFile file) throws Exception {
         StringBuffer message = new StringBuffer();
+        // 获取公司id
+        Companyinfo comi = (Companyinfo) request.getSession().getAttribute("infos");
+        Integer cid = comi.getId();
+        // 创建提示信息字符串
         String tipInfo = null;
         // 获取文件名
-        String fileName = file.getName();
+        String fileName = file.getOriginalFilename();
         List<Map<String, Object>> excelList = new ArrayList<Map<String, Object>>();
         // 获取文件名并转换为表名
-        String tableName = ctpYin.getPingYin(fileName.substring(0, fileName.lastIndexOf(".")));
-        List<String> tableColumnsType = importExecl.changeSqlColumnTypeToJava(xsTableMapper.getColumnType(tableName));
-        // 查询表字段名并删除主键字段名
-        List<String> columnList = xsTableMapper.getColumnName(tableName);
+        String tableName = cid + ctpYin.getPingYin(fileName.substring(0, fileName.lastIndexOf(".")));
+        tableinfo.setPhysicaltablename(tableName);
+        tableinfo.setCid(cid);
         if (importExecl.validateExcel(file)) {
-            excelList = importExecl.getExceList(importExecl.getWorkbook(file), formula);
-            tipInfo = importExecl.checkExcel(excelList, tableColumnsType, columnList);
+            Workbook workbook = importExecl.getWorkbook(file);
+            tableinfo.setPhysicaltablename(tableName);
+            tableinfo.setCid(cid);
+            // 查询表id
+            Tableinfo tableinfo1 = tableinfoMapper.selectPrimaryKey(tableinfo);
+            Integer tid = tableinfo1.getId();
+            // 查询表字段名
+            List<Object> listColumnsName = (List<Object>) tablecolumninfoMapper.selectColumnName(tid);
+            // 查询表字段类型
+            List<Object> listColumnsType = (List<Object>) tablecolumninfoMapper.selectColumnType(tid);
+            // 获取表首行数据
+            List<String> listTitle = importExecl.getColumns(workbook);
+            // 判断表首行数据是否与数据库中的字段名匹配
+            if (importExecl.columnIsMatches(listTitle, listColumnsName)) {
+                excelList = importExecl.getExceList(importExecl.getWorkbook(file));
+                message.append(importExecl.checkExcel(excelList, listColumnsType, listColumnsName));
+            } else {
+                message.append("上传文件首行字段与模板有区别,请检查");
+            }
+
+        } else {
+            message.append("上传文件不是excel文件,请检查");
         }
         return tipInfo;
 

@@ -1,7 +1,11 @@
 package cn.bdqn.datacockpit.entity;
 
+import java.io.Serializable;
 
-public class Tableinfo {
+import org.springframework.stereotype.Component;
+
+@Component
+public class Tableinfo implements Serializable {
     private Integer id;
 
     private String name;

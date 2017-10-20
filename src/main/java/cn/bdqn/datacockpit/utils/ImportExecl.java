@@ -15,7 +15,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -75,15 +74,15 @@ public class ImportExecl {
 
         /** 检查文件名是否为空或者是否是Excel格式的文件 */
 
-        if (file == null || !(WDWUtil.isExcel2003(file)) || WDWUtil.isExcel2007(file)) {
+        if (file != null || WDWUtil.isExcel2003(file) || WDWUtil.isExcel2007(file)) {
 
-            errorInfo = "文件名不是excel格式";
+            errorInfo = "文件名是excel格式";
 
-            return false;
+            return true;
 
         }
 
-        return true;
+        return false;
 
     }
 
@@ -114,7 +113,7 @@ public class ImportExecl {
      * @param workbook
      * @return
      */
-    public List<Map<String, Object>> getExceList(Workbook workbook, FormulaEvaluator formula) {
+    public List<Map<String, Object>> getExceList(Workbook workbook) {
         // 用户存储除表中第一行的所有数据
         List<Map<String, Object>> excelList = new ArrayList<Map<String, Object>>();
         // 用于存储除第一行的单行的数据
@@ -132,7 +131,7 @@ public class ImportExecl {
                 // 遍历该行所有的列,j表示列数 getPhysicalNumberOfCells行的总数
                 for (int k = 0; k < row.getPhysicalNumberOfCells(); k++) {
                     Cell cell = row.getCell(k);
-                    Object object = getCellData(cell, formula);
+                    Object object = getCellData(cell);
                     excelMap.put(columns.get(j), object);
                 }
                 excelList.add(excelMap);
@@ -151,7 +150,7 @@ public class ImportExecl {
      * @param formula
      * @return
      */
-    private Object getCellData(Cell cell, FormulaEvaluator formula) {
+    private Object getCellData(Cell cell) {
         if (cell == null) {
             return null;
         }
@@ -166,8 +165,6 @@ public class ImportExecl {
             }
         case Cell.CELL_TYPE_BOOLEAN:// 返回boolean类型
             return cell.getBooleanCellValue();
-        case Cell.CELL_TYPE_FORMULA:// 公式类型
-            return formula.evaluate(cell).getNumberValue();
         default:
             return null;
         }
@@ -207,13 +204,13 @@ public class ImportExecl {
      * @author huMZ
      * @return
      */
-    public boolean columnIsMatches(List<String> listCells, List<String> columnList) {
+    public boolean columnIsMatches(List<String> listCells, List<Object> listColumnsName) {
         StringBuffer cellBuffer = new StringBuffer();
         StringBuffer colunmBuffer = new StringBuffer();
         for (String string1 : listCells) {
             cellBuffer.append(string1);
         }
-        for (String string2 : columnList) {
+        for (Object string2 : listColumnsName) {
             colunmBuffer.append(string2);
         }
         if (cellBuffer.toString().equals(colunmBuffer.toString())) {
@@ -255,14 +252,17 @@ public class ImportExecl {
      * @author huMZ
      */
     @SuppressWarnings("null")
-    public String checkExcel(List<Map<String, Object>> excelList, List<String> tableColumnsType, List<String> columnList) {
+    public String checkExcel(List<Map<String, Object>> excelList, List<Object> listColumnsType,
+            List<Object> listColumnsName) {
         boolean flag;
         StringBuffer message = new StringBuffer("");
         Map<String, Object> map = new HashMap<String, Object>();
+        // 遍历整个excel表数据
         for (int j = 0; j < excelList.size(); j++) {
+            // 获取某一行数据
             map = excelList.get(j);
-            for (int i = 0; i < tableColumnsType.size(); i++) {
-                flag = map.get(columnList.get(i)).getClass().toString().equals(tableColumnsType.get(i));
+            for (int i = 0; i < listColumnsType.size(); i++) {
+                flag = map.get(listColumnsName.get(i)).getClass().toString().equals(listColumnsType.get(i));
                 if (!flag) {
                     message.append("您表中第" + j + "行,第" + i + "列数据有问题,请检查后再上传,");
                 }

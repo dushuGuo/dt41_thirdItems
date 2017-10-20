@@ -407,9 +407,7 @@ public class AdminTilesController {
         record.setUpdatetime(date);
         record.setShowtype(attr[0]);
         record.setPhysicaltablename(tbName);
-        HttpSession session = req.getSession();
-        String ids = (String) session.getAttribute("No1");
-        Integer cid = Integer.parseInt(ids);
+        Integer cid = Integer.parseInt(No1Id);
         record.setCid(cid);
         ts.insert(record);
         Tableinfo tableinfo = ts.selectPrimaryKey(record);
