@@ -46,7 +46,7 @@
 	height: 40px;
 	position: absolute;
 	top: 300px;
-	left: 510px;
+	left: 545px;
 	index: 1000;
 	font-style: italic;
 	text-align: center;
@@ -111,7 +111,7 @@
        <span id="ph" style="color:red"></span>
       <div class="form-group has-feedback" style="margin-top: 30px">
        <sapn style="display: block;margin-bottom: -30px">*邮箱地址： </sapn>
-            <input type="text" class="form-control" style="width: 270px;margin-left: 85px" placeholder="请输入邮箱地址" name="email" required="required" pattern="^([a-z0-9A-Z]+[-|\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\.)+[a-zA-Z]{2,}$">
+            <input type="email" class="form-control" style="width: 270px;margin-left: 85px" placeholder="请输入邮箱地址" name="email" required="required" pattern="^([a-z0-9A-Z]+[-|\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\.)+[a-zA-Z]{2,}$">
         <span style="display: block;margin-top: -30px;margin-left: 320px">
             <img src="<%=basePath %>/resource/images/ios7-email.png" style="width: 27px;height: 25px">
         </span>
@@ -189,8 +189,11 @@ $(".state").hide();
   </script>
   <script>
 $(document).ready(function(){
-    var countdown=3;
-    if(${msg==0}){   	
+    var countdown=1;
+   
+    if(${msg==0}){
+    	
+  
         $(".state").show(function settime() { 
     	 
          if (countdown == 0) { 		        
