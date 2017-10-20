@@ -78,6 +78,11 @@ public class AdminTilesController {
         return "admin_index.page";
     }
 
+    @RequestMapping("/admin_pass")
+    public String index1(Model model) {
+        return "admin_pass.page";
+    }
+
     @RequestMapping("/admin_tongzhi1")
     public String tongzhi1(Model model) {
         model.addAttribute("menus", "1");

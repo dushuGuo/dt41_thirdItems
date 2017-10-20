@@ -14,8 +14,8 @@
   <div class="register-box-body" style="width: 390px">
     
 
-    <form action="./updatePassword1.shtml" method="post">
-    	<input type="hidden" value="${comp.id }" name="id">
+    <form action="./updatePassword2.shtml" method="post">
+    	<input type="hidden" value="${user.id }" name="id">
       <div class="form-group has-feedback" id="ddd1">
         <sapn style="display: block;margin-bottom: -30px">原密码： </sapn>
         <input type="text" class="form-control" style="width: 270px;margin-left: 85px"   name="oldPassword">
