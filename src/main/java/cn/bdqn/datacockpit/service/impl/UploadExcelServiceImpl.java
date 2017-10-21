@@ -21,11 +21,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import cn.bdqn.datacockpit.entity.Companyinfo;
+import cn.bdqn.datacockpit.entity.Tablecolumninfo;
 import cn.bdqn.datacockpit.entity.Tableinfo;
 import cn.bdqn.datacockpit.mapper.TablecolumninfoMapper;
 import cn.bdqn.datacockpit.mapper.TableinfoMapper;
 import cn.bdqn.datacockpit.utils.ChineseToPinYin;
 import cn.bdqn.datacockpit.utils.ImportExecl;
+import cn.bdqn.datacockpit.utils.JdbcUtil;
 
 /**
  * Description: <br/>
@@ -36,7 +38,7 @@ import cn.bdqn.datacockpit.utils.ImportExecl;
  * @see
  */
 @Service
-public class UploadExcelImpl {
+public class UploadExcelServiceImpl {
     private ImportExecl importExecl = new ImportExecl();
 
     private ChineseToPinYin ctpYin = new ChineseToPinYin();
@@ -49,6 +51,8 @@ public class UploadExcelImpl {
 
     @Autowired
     private Tableinfo tableinfo;
+
+    JdbcUtil jdbcUtil = new JdbcUtil();
 
     /**
      * 
@@ -64,6 +68,7 @@ public class UploadExcelImpl {
         // 获取公司id
         Companyinfo comi = (Companyinfo) request.getSession().getAttribute("infos");
         Integer cid = comi.getId();
+        String companyName = ctpYin.getPingYin(comi.getCorpname());
         // 创建提示信息字符串
         String tipInfo = null;
         // 获取文件名
@@ -79,23 +84,36 @@ public class UploadExcelImpl {
             tableinfo.setCid(cid);
             // 查询表id
             Tableinfo tableinfo1 = tableinfoMapper.selectPrimaryKey(tableinfo);
-            Integer tid = tableinfo1.getId();
-            // 查询表字段名
-            List<Object> listColumnsName = (List<Object>) tablecolumninfoMapper.selectColumnName(tid);
-            // 查询表字段类型
-            List<Object> listColumnsType = (List<Object>) tablecolumninfoMapper.selectColumnType(tid);
-            // 获取表首行数据
-            List<String> listTitle = importExecl.getColumns(workbook);
-            // 判断表首行数据是否与数据库中的字段名匹配
-            if (importExecl.columnIsMatches(listTitle, listColumnsName)) {
-                excelList = importExecl.getExceList(importExecl.getWorkbook(file));
-                message.append(importExecl.checkExcel(excelList, listColumnsType, listColumnsName));
+            if (tableinfo1 != null) {
+                Integer tid = tableinfo1.getId();
+                // 查询表字段名
+                List<Tablecolumninfo> listColumnsName = tablecolumninfoMapper.selectColumnName(tid);
+                // 查询表字段类型
+                List<Tablecolumninfo> listColumnsType = tablecolumninfoMapper.selectColumnType(tid);
+                // 获取表首行数据
+                List<String> listTitle = importExecl.getColumns(workbook);
+                // 判断表首行数据是否与数据库中的字段名匹配
+                if (importExecl.columnIsMatches(listTitle, listColumnsName)) {
+                    // 获取excel表中所有数据
+                    excelList = importExecl.getExceList(importExecl.getWorkbook(file));
+                    message.append(importExecl.checkExcel(excelList, listColumnsType, listColumnsName));
+                } else {
+                    message.append("上传文件首行字段与模板有区别,请检查");
+                }
+
             } else {
-                message.append("上传文件首行字段与模板有区别,请检查");
+                message.append("excel文件名与表名不匹配,请检查");
             }
 
         } else {
             message.append("上传文件不是excel文件,请检查");
+        }
+        if (message.toString().equals("")) {
+            jdbcUtil.insertIntoTable(tableName, excelList);
+            tipInfo = "数据已上传成功";
+            importExecl.uploadExcel(request, file, companyName);
+        } else {
+            tipInfo = message.toString();
         }
         return tipInfo;
 

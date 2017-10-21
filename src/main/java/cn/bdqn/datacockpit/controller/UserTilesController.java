@@ -20,7 +20,7 @@ import cn.bdqn.datacockpit.service.InfoService;
 import cn.bdqn.datacockpit.service.TablecolumninfoService;
 import cn.bdqn.datacockpit.service.TableinfoService;
 import cn.bdqn.datacockpit.service.XsTableService;
-import cn.bdqn.datacockpit.service.impl.UploadExcelImpl;
+import cn.bdqn.datacockpit.service.impl.UploadExcelServiceImpl;
 import cn.bdqn.datacockpit.utils.ChineseToPinYin;
 
 @Controller
@@ -38,7 +38,7 @@ public class UserTilesController {
     private TablecolumninfoService tcs;
 
     @Autowired
-    private UploadExcelImpl UploadExcelImpl;
+    private UploadExcelServiceImpl uploadExcelserviceImpl;
 
     @RequestMapping("/user_pass")
     public String pass(Model model) {
@@ -130,7 +130,8 @@ public class UserTilesController {
      */
     @RequestMapping("/user_uploads")
     public String upload(Model model, HttpServletRequest request, @RequestParam MultipartFile file) throws Exception {
-        UploadExcelImpl.upload(request, file);
+        String info = uploadExcelserviceImpl.upload(request, file);
+        model.addAttribute("tipinfo", info);
         return "user_shuju2.pages";
         // String uploadFilePath =
         // request.getSession().getServletContext().getRealPath("upload" +

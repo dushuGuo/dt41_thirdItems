@@ -35,7 +35,7 @@ public interface TablecolumninfoMapper {
      * @param tid
      * @return
      */
-    List<Object> selectColumnName(Integer tid);
+    List<Tablecolumninfo> selectColumnName(Integer tid);
 
     /**
      * 
@@ -45,5 +45,5 @@ public interface TablecolumninfoMapper {
      * @param tid
      * @return
      */
-    List<Object> selectColumnType(Integer tid);
+    List<Tablecolumninfo> selectColumnType(Integer tid);
 }

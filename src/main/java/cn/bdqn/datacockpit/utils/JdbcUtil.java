@@ -18,10 +18,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class JdbcUtil {
-    private static ApplicationContext context = null;
+    private static ApplicationContext context = new ClassPathXmlApplicationContext("spring-common.xml");
+
+    private static ChineseToPinYin cPinYin = new ChineseToPinYin();
 
     public static ApplicationContext getContext() {
         return context;
@@ -50,6 +53,35 @@ public class JdbcUtil {
             e.printStackTrace();
         }
         return re;
+    }
+
+    /**
+     * 
+     * Description: 将excel表中数据存入相应数据表中<br/>
+     *
+     * @author huMZ
+     * @param tableName
+     * @param contents
+     * @return
+     */
+    public static int insertIntoTable(String tableName, List<Map<String, Object>> excelList) {
+        JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
+        int result = 0;
+        for (int i = 0; i < excelList.size(); i++) {
+            Map<String, Object> map = excelList.get(i);
+            String sql = "insert into " + tableName + " set ";
+            Set<String> set = map.keySet();
+            for (String key : set) {
+                if (map.get(key) instanceof Double) {
+                    sql += cPinYin.getPingYin(key) + "=" + map.get(key) + ",";
+                } else {
+                    sql += cPinYin.getPingYin(key) + "='" + map.get(key) + "',";
+                }
+            }
+            sql = sql.substring(0, sql.lastIndexOf(","));
+            result = jt.update(sql);
+        }
+        return result;
     }
 
     /**
