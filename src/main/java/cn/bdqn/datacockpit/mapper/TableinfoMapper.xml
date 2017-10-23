@@ -120,4 +120,10 @@
       showtype = #{showtype,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 个人修改 -->
+  	<update id="shujus_updatebyid" parameterType="cn.bdqn.datacockpit.entity.Tableinfo">
+  		 UPDATE `tableinfo` SET state=#{state} WHERE id = #{id}
+  	</update>
+  
 </mapper>

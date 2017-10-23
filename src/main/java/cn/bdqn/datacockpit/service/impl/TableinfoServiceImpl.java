@@ -55,4 +55,9 @@ public class TableinfoServiceImpl implements TableinfoService {
         return tm.selectPrimaryKey(record);
     }
 
+    @Override
+    public Integer shujus_updatebyid(Tableinfo record) {
+
+        return tm.shujus_updatebyid(record);
+    }
 }

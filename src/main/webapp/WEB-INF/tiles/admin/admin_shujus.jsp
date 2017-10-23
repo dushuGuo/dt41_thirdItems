@@ -37,11 +37,11 @@ text-align: center;
           <div class="box">
 
             <div class="box-body">
-             <!-- 更新 -->
+             <%-- <!-- 更新 -->
                 <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr class = "tableLine">
-                  <%-- <th>${TablecolumninfoList[3].columnname }</th> --%>
+                  <th>${TablecolumninfoList[3].columnname }</th>
                   
                   <c:forEach items="${TablecolumninfoList}" var="info" varStatus="status">
                   
@@ -59,9 +59,13 @@ text-align: center;
                 </thead>
                 <tbody>
                 
-                </tbody>
-                
-              </table>
+                </tbody> --%>
+                <h1>进来了</h1>
+                <table border="1px solid" cellspacing="0px" width="100%">
+                <c:forEach items="${tableColumn }" var="list">
+                	<th>${list }</th>
+                </c:forEach>
+                </table>
   <!-- Main content -->
     
         <div class="col-md-6">

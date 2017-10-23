@@ -29,4 +29,7 @@ public interface TableinfoService {
     Tableinfo selectByPrimaryKey(Integer id);
 
     Tableinfo selectPrimaryKey(Tableinfo record);
+
+    // 个人修改。
+    Integer shujus_updatebyid(Tableinfo record);
 }
