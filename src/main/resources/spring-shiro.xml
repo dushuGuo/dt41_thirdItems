@@ -84,7 +84,7 @@
 	<bean id="sessionManager"
 		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
 		<!-- 默认时间 -->
-		<property name="globalSessionTimeout" value="480000"></property>
+		<property name="globalSessionTimeout" value="48000000"></property>
 		<!-- session过期，即可删除 -->
 		<property name="deleteInvalidSessions" value="true"></property>
 		<property name="sessionIdCookie" ref="simpleCookie" />
