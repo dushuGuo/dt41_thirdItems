@@ -264,6 +264,21 @@ public class LoginController {
     }
 
     /**
+     * 当登录角色为管理员时，获取管理员信息
+     * 
+     * @param req
+     * @return
+     */
+    @RequestMapping("/updateAdmin")
+    public String updateAdmin(HttpServletRequest req) {
+        HttpSession session = req.getSession();
+        Userinfo user = (Userinfo) session.getAttribute("infos");
+        session.setAttribute("user", user);
+
+        return "redirect:/admin_uppassword.shtml";
+    }
+
+    /**
      * 动态修改资料，修改密码不在此页面
      * 
      * @param company
@@ -283,7 +298,7 @@ public class LoginController {
     }
 
     /**
-     * 把密码带到页面
+     * 当登录角色为用户时，获取用户信息
      * 
      * @param req
      * @return
@@ -297,7 +312,7 @@ public class LoginController {
     }
 
     /**
-     * 修改密码
+     * 修改用户密码
      * 
      * @return
      */
@@ -319,6 +334,35 @@ public class LoginController {
             return "redirect:/user_index.shtml";
         }
         return "redirect:/user_pass.shtml";
+    }
+
+    /**
+     * 
+     * Description:修改管理员密码 <br/>
+     * 
+     * @author zhangJZ
+     * @param uinfo
+     * @param req
+     * @return
+     */
+    @RequestMapping("/updatePassword2")
+    public String updatePassword2(Userinfo uinfo, HttpServletRequest req) {
+        // 获取原始密码
+        String password = uinfo.getPassword();
+        // 加密盐
+        String salt = ((Userinfo) req.getSession().getAttribute("infos")).getEmail();
+        // MD5方式加密，加密次数和配置文件中保持一致
+        Md5Hash md5 = new Md5Hash(password, salt, 2);
+        // 加密后
+        String md5PassWord = md5.toHex();
+        // md5.toHex();
+        // 存储到用户中去
+        uinfo.setPassword(md5PassWord);
+        int flag = userinfo.updateByPrimaryKeySelective(uinfo);
+        if (flag >= 1) {
+            return "redirect:/admin_index.shtml";
+        }
+        return "redirect:/admin_pass.shtml";
     }
 
     /**

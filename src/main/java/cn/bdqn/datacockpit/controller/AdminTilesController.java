@@ -83,6 +83,11 @@ public class AdminTilesController {
         return "admin_index.page";
     }
 
+    @RequestMapping("/admin_pass")
+    public String index1(Model model) {
+        return "admin_pass.page";
+    }
+
     @RequestMapping("/admin_tongzhi1")
     public String tongzhi1(Model model) {
         model.addAttribute("menus", "1");
@@ -412,9 +417,7 @@ public class AdminTilesController {
         record.setUpdatetime(date);
         record.setShowtype(attr[0]);
         record.setPhysicaltablename(tbName);
-        HttpSession session = req.getSession();
-        String ids = (String) session.getAttribute("No1");
-        Integer cid = Integer.parseInt(ids);
+        Integer cid = Integer.parseInt(No1Id);
         record.setCid(cid);
         ts.insert(record);
         Tableinfo tableinfo = ts.selectPrimaryKey(record);

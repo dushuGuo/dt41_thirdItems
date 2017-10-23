@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -70,9 +69,6 @@ public class AdminTilesServiceImpl implements AdminTilesService {
             if (i == 0) {
                 // 存图形id
                 map.put("shows", attr[0]);
-            } else if (i == 1) {
-                HttpSession session = req.getSession();
-                // 拼接新建表名为用户id+表明（防止重名）
             } else if (2 * i - 1 <= attr.length && i >= 2) {
                 // 存 字段名 和 字段类型
                 map.put(ctp.getPingYin(attr[2 * i - 2]), attr[2 * i - 1]);
@@ -80,14 +76,13 @@ public class AdminTilesServiceImpl implements AdminTilesService {
                 tablecolumninfo.setColumnname(attr[2 * i - 2]);
                 tablecolumninfo.setTid(tableinfo.getId());
                 if (attr[2 * i - 1].equals("1")) {
-                    tablecolumninfo.setColumntype("String");
+                    tablecolumninfo.setColumntype("VARCHAR");
                 } else if (attr[2 * i - 1].equals("2")) {
-                    tablecolumninfo.setColumntype("Integer");
+                    tablecolumninfo.setColumntype("INTEGER");
                 } else {
-                    tablecolumninfo.setColumntype("Double");
+                    tablecolumninfo.setColumntype("FLOAT");
                 }
                 tablecolumninfoMapper.insert(tablecolumninfo);
-
             }
         }
 
