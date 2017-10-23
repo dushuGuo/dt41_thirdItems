@@ -69,8 +69,7 @@ public class LoginController {
 
     // 验证码
     @RequestMapping(value = "getYzm")
-    public @ResponseBody
-    List<String> getYzm(HttpServletResponse response, HttpServletRequest request) {
+    public @ResponseBody List<String> getYzm(HttpServletResponse response, HttpServletRequest request) {
 
         List<String> lists = new ArrayList<String>();
         try {
