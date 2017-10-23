@@ -36,13 +36,40 @@
 </head>
 <body class="hold-transition register-page">
     <center>
-        <div class="alert alert-success alert-dismissible" style="width: 300px;height: 100px;margin-top:200px">
+        <div class="alert alert-success alert-dismissible" style="width: 300px;height: 140px;margin-top:200px">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <h4>提示</h4>
                    <p>您已经成功退出登录</p>
-                   <p>3秒钟之后将为您跳转到登录页面</p>
+                   <p><span>3</span>秒钟之后将为您跳转到登录页面</p>
+                   <p>如不跳转,请点击<a href="<%=basePath %>login.jsp">这里</a></p>
                     
         </div>
      </center>
   </body>
+  	<script type="text/javascript">
+		$(document).ready(function(){
+			var a=2;
+			function auto() {
+	setInterval(function() {
+
+if(a==0){
+	window.location.href="<%=basePath %>login.jsp";
+	return;
+}else{
+	
+$("span").html(a);
+	
+	a--;
+	
+}
+			
+		}, 1000);
+	}
+	auto();
+			
+			
+			
+		})
+		
+	</script>
   </html>
