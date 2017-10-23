@@ -15,12 +15,13 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
+
+import cn.bdqn.datacockpit.entity.Tablecolumninfo;
 
 public class ImportExecl {
 
@@ -75,15 +76,13 @@ public class ImportExecl {
 
         /** 检查文件名是否为空或者是否是Excel格式的文件 */
 
-        if (file == null || !(WDWUtil.isExcel2003(file)) || WDWUtil.isExcel2007(file)) {
+        if (file != null || WDWUtil.isExcel2003(file) || WDWUtil.isExcel2007(file)) {
 
-            errorInfo = "文件名不是excel格式";
-
-            return false;
+            return true;
 
         }
-
-        return true;
+        errorInfo = "文件名不是excel格式";
+        return false;
 
     }
 
@@ -114,11 +113,11 @@ public class ImportExecl {
      * @param workbook
      * @return
      */
-    public List<Map<String, Object>> getExceList(Workbook workbook, FormulaEvaluator formula) {
+    public List<Map<String, Object>> getExceList(Workbook workbook) {
         // 用户存储除表中第一行的所有数据
         List<Map<String, Object>> excelList = new ArrayList<Map<String, Object>>();
-        // 用于存储除第一行的单行的数据
-        Map<String, Object> excelMap = new HashMap<String, Object>();
+        // // 用于存储除第一行的单行的数据
+        // Map<String, Object> excelMap = new HashMap<String, Object>();
         // 获取工作表
         Sheet sheet = workbook.getSheetAt(0);
         Row row = null;
@@ -126,16 +125,18 @@ public class ImportExecl {
             sheet = workbook.getSheetAt(i);
             // 遍历该表除第一行外所有的行,j表示行数,getPhysicalNumberOfRows行的总数
             for (int j = 1; j < sheet.getPhysicalNumberOfRows(); j++) {
+                // 用于存储除第一行的单行的数据
+                Map<String, Object> excelMap1 = new HashMap<String, Object>();
                 row = sheet.getRow(j);
                 // 获取第一行数据作为键
                 List<String> columns = getColumns(workbook);
-                // 遍历该行所有的列,j表示列数 getPhysicalNumberOfCells行的总数
+                // 遍历该行所有的列,k表示列数 getPhysicalNumberOfCells行的总数
                 for (int k = 0; k < row.getPhysicalNumberOfCells(); k++) {
                     Cell cell = row.getCell(k);
-                    Object object = getCellData(cell, formula);
-                    excelMap.put(columns.get(j), object);
+                    Object object = getCellData(cell);
+                    excelMap1.put(columns.get(k), object);
                 }
-                excelList.add(excelMap);
+                excelList.add(excelMap1);
             }
         }
 
@@ -151,7 +152,7 @@ public class ImportExecl {
      * @param formula
      * @return
      */
-    private Object getCellData(Cell cell, FormulaEvaluator formula) {
+    private Object getCellData(Cell cell) {
         if (cell == null) {
             return null;
         }
@@ -166,8 +167,6 @@ public class ImportExecl {
             }
         case Cell.CELL_TYPE_BOOLEAN:// 返回boolean类型
             return cell.getBooleanCellValue();
-        case Cell.CELL_TYPE_FORMULA:// 公式类型
-            return formula.evaluate(cell).getNumberValue();
         default:
             return null;
         }
@@ -185,15 +184,16 @@ public class ImportExecl {
         // 存储表中第一行的数据
         List<String> columnList = new ArrayList<String>();
         // 获取第一张工作表
-        Sheet sheet = workbook.getSheetAt(0);
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-            sheet = workbook.getSheetAt(i);
+            Sheet sheet = workbook.getSheetAt(i);
             // 将首行数据存储,以作为表字段使用
             Row row = sheet.getRow(0);
-            for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
-                Cell cell = row.getCell(j);
-                String column = ctpy.getPingYin(cell.getStringCellValue());
-                columnList.add(column);
+            if (row != null) {
+                for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
+                    Cell cell = row.getCell(j);
+                    String column = cell.getStringCellValue();
+                    columnList.add(column);
+                }
             }
 
         }
@@ -207,19 +207,19 @@ public class ImportExecl {
      * @author huMZ
      * @return
      */
-    public boolean columnIsMatches(List<String> listCells, List<String> columnList) {
-        StringBuffer cellBuffer = new StringBuffer();
+    public boolean columnIsMatches(List<String> listCells, List<Tablecolumninfo> listColumnsName) {
         StringBuffer colunmBuffer = new StringBuffer();
+        boolean flag = true;
+        for (Tablecolumninfo map : listColumnsName) {
+            colunmBuffer.append(map.getColumnname());
+        }
+        String columnName = colunmBuffer.toString();
         for (String string1 : listCells) {
-            cellBuffer.append(string1);
+            if (!columnName.contains(string1)) {
+                flag = false;
+            }
         }
-        for (String string2 : columnList) {
-            colunmBuffer.append(string2);
-        }
-        if (cellBuffer.toString().equals(colunmBuffer.toString())) {
-            return true;
-        }
-        return false;
+        return flag;
     }
 
     /**
@@ -254,19 +254,38 @@ public class ImportExecl {
      *
      * @author huMZ
      */
-    @SuppressWarnings("null")
-    public String checkExcel(List<Map<String, Object>> excelList, List<String> tableColumnsType, List<String> columnList) {
+    public String checkExcel(List<Map<String, Object>> excelList, List<Tablecolumninfo> listColumnsType,
+            List<Tablecolumninfo> listColumnsName) {
         boolean flag;
         StringBuffer message = new StringBuffer("");
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (int j = 0; j < excelList.size(); j++) {
-            map = excelList.get(j);
-            for (int i = 0; i < tableColumnsType.size(); i++) {
-                flag = map.get(columnList.get(i)).getClass().toString().equals(tableColumnsType.get(i));
-                if (!flag) {
-                    message.append("您表中第" + j + "行,第" + i + "列数据有问题,请检查后再上传,");
+        // 将数据库中表字段类型取出存入list<String>
+        List<String> columnTypes = new ArrayList<String>();
+        for (Tablecolumninfo tablecolumninfo : listColumnsType) {
+            columnTypes.add(tablecolumninfo.getColumntype());
+        }
+        for (int i = 0; i < excelList.size(); i++) {
+
+            Map<String, Object> map = excelList.get(i);
+            for (int j = 0; j < map.size(); j++) {
+                String columnType = columnTypes.get(j);
+                String columnName = listColumnsName.get(j).getColumnname();
+                if (columnType.equals("INTEGER")) {
+                    try {
+                        Integer integer = Integer.parseInt(((map.get(columnName)).toString().substring(0,
+                                map.get(columnName).toString().lastIndexOf(".")))
+                                + "");
+                    } catch (Exception e) {
+                        message.append("您表中第" + (i + 1) + "行,第" + (j + 1) / listColumnsName.size() + "列信息有误.请检查");
+                    }
+                } else if (columnType.equals("FLOAT")) {
+                    try {
+                        Double double1 = Double.parseDouble(map.get(columnName) + "");
+                    } catch (Exception e) {
+                        message.append("您表中第" + (i + 2) + "行,第" + (j + 1) / listColumnsName.size() + "列信息有误.请检查");
+                    }
                 }
             }
+
         }
         errorInfo = message.toString();
         return errorInfo;
@@ -278,8 +297,9 @@ public class ImportExecl {
      *
      * @author huMZ
      * @param file
+     * @throws Exception
      */
-    public void uploadExcel(HttpServletRequest request, MultipartFile file, String companyName) {
+    public void uploadExcel(HttpServletRequest request, MultipartFile file, String companyName) throws Exception {
 
         if (ServletFileUpload.isMultipartContent(request)) {
             // 获取文件名
@@ -290,11 +310,9 @@ public class ImportExecl {
             // excelName.substring(excelName.lastIndexOf("."));
             // 根据日期以及公司名创建文件夹
             String newName = new SimpleDateFormat("yyyyMMDD").format(new Date());
-            String path = realpath + "//" + companyName + "//" + newName;
+            String path = realpath + "/" + companyName + "/" + newName;
             File file1 = new File(path);
-            if (!file1.exists()) {
-                file1.mkdir();
-            }
+            file1.mkdirs();
             try {
                 file.transferTo(new File(path + "//" + excelName));
             } catch (IllegalStateException | IOException e) {

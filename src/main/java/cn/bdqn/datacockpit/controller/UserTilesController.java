@@ -6,11 +6,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import cn.bdqn.datacockpit.entity.Info;
@@ -20,7 +20,7 @@ import cn.bdqn.datacockpit.service.InfoService;
 import cn.bdqn.datacockpit.service.TablecolumninfoService;
 import cn.bdqn.datacockpit.service.TableinfoService;
 import cn.bdqn.datacockpit.service.XsTableService;
-import cn.bdqn.datacockpit.service.impl.UploadExcelImpl;
+import cn.bdqn.datacockpit.service.impl.UploadExcelServiceImpl;
 import cn.bdqn.datacockpit.utils.ChineseToPinYin;
 
 @Controller
@@ -38,7 +38,7 @@ public class UserTilesController {
     private TablecolumninfoService tcs;
 
     @Autowired
-    private UploadExcelImpl UploadExcelImpl;
+    private UploadExcelServiceImpl uploadExcelserviceImpl;
 
     @RequestMapping("/user_pass")
     public String pass(Model model) {
@@ -129,9 +129,9 @@ public class UserTilesController {
      * @throws Exception
      */
     @RequestMapping("/user_uploads")
-    public String upload(Model model, HttpServletRequest request, MultipartFile file, FormulaEvaluator formula)
-            throws Exception {
-        UploadExcelImpl.upload(file, formula);
+    public String upload(Model model, HttpServletRequest request, @RequestParam MultipartFile file) throws Exception {
+        String info = uploadExcelserviceImpl.upload(request, file);
+        model.addAttribute("tipinfo", info);
         return "user_shuju2.pages";
         // String uploadFilePath =
         // request.getSession().getServletContext().getRealPath("upload" +
