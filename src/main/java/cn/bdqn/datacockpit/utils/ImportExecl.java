@@ -116,8 +116,6 @@ public class ImportExecl {
     public List<Map<String, Object>> getExceList(Workbook workbook) {
         // 用户存储除表中第一行的所有数据
         List<Map<String, Object>> excelList = new ArrayList<Map<String, Object>>();
-        // // 用于存储除第一行的单行的数据
-        // Map<String, Object> excelMap = new HashMap<String, Object>();
         // 获取工作表
         Sheet sheet = workbook.getSheetAt(0);
         Row row = null;
