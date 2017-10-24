@@ -138,9 +138,10 @@ text-align: center;
          <center>
             <input class="ups1" type="text" size="20" name="upfile" id="upfile" style="border:1px dotted #ccc">  
 
-            <input type="button" value="浏览" onclick="path.click()" style="border:1px solid #ccc;background:#fff">  
-            <input class="ups2" type="file" id="path" name="path" style="display:none" onchange="upfile.value=this.value">
+            <input type="button" value="浏览" onclick="file.click()" style="border:1px solid #ccc;background:#fff">  
+            <input class="ups2" type="file" id="file" name="file" style="display:none" onchange="upfile.value=this.value">
              <!-- <input type="file" id="path" style="display:none" onchange="upfile.value=this.value"> -->
+             <p>*只能上传excel文件,文件大小需要小于2M,文件名需与表名一致!</p>
          </center>   
          </div>
 
