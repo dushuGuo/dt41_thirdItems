@@ -18,6 +18,7 @@ import cn.bdqn.datacockpit.datatable.DatatableResult;
 import cn.bdqn.datacockpit.datatable.IsSearchCondition;
 import cn.bdqn.datacockpit.datatable.SearchCondition;
 import cn.bdqn.datacockpit.entity.Analysistasks;
+import cn.bdqn.datacockpit.entity.Companyinfo;
 import cn.bdqn.datacockpit.entity.Datarelation;
 import cn.bdqn.datacockpit.entity.Result;
 import cn.bdqn.datacockpit.entity.Tableinfo;
@@ -76,14 +77,9 @@ public class Json2Controller {
     @ResponseBody
     @RequestMapping(value = "shuju_3")
     public Map<String, Object> datatable3(@IsSearchCondition SearchCondition searchCondition, HttpServletRequest request) {
-
-        HttpSession session = request.getSession();
-
-        // ActiveUser user=(ActiveUser)session.getAttribute("activeUser");
-        // Integer cid=user.getCompanyId();
-
-        // 需修改
-        String cid = "8";
+        // 获取公司id
+        Companyinfo comi = (Companyinfo) request.getSession().getAttribute("infos");
+        Integer cid = comi.getId();
 
         String name = cid + request.getParameter("id");
         BaseDao baseDao = new BaseDao();
@@ -104,15 +100,11 @@ public class Json2Controller {
     @ResponseBody
     @RequestMapping(value = "shuju_2")
     public DatatableResult<Tableinfo> datatable(@IsSearchCondition SearchCondition searchCondition,
-            HttpServletRequest req) {
+            HttpServletRequest request) {
         DatatableResult<Tableinfo> list = new DatatableResult<>();
-        HttpSession session = req.getSession();
-
-        // ActiveUser user=(ActiveUser)session.getAttribute("activeUser");
-        // Integer cid=user.getCompanyId();
-
-        // 需修改
-        int cid = 8;
+        // 获取公司id
+        Companyinfo comi = (Companyinfo) request.getSession().getAttribute("infos");
+        Integer cid = comi.getId();
 
         List<Tableinfo> lists = ts.selectAll(cid);
         for (Tableinfo tableinfo : lists) {
@@ -137,16 +129,16 @@ public class Json2Controller {
      */
     @ResponseBody
     @RequestMapping("/shuju_table")
-    public Map<String, Object> shuju_table(Datarelation datarlation, HttpServletRequest req) throws Exception {
+    public Map<String, Object> shuju_table(Datarelation datarlation, HttpServletRequest request) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
-        HttpSession session = req.getSession();
+        HttpSession session = request.getSession();
 
         // ActiveUser user=(ActiveUser)session.getAttribute("activeUser");
         // Integer cid=user.getCompanyId();
 
-        // 需修改
-        Integer cid = 8;
-
+        // 获取公司id
+        Companyinfo comi = (Companyinfo) request.getSession().getAttribute("infos");
+        Integer cid = comi.getId();
         List<Tableinfo> tableinfoList = ts.selectAll(cid);
         List<Datarelation> datarelationList = datarelationService.selectByCid(cid);
         map.put("tableinfoList", tableinfoList);
@@ -163,15 +155,16 @@ public class Json2Controller {
      */
     @ResponseBody
     @RequestMapping(value = "shuju_0")
-    public List<Analysistasks> getAllAnalysistasks(HttpServletRequest req) {
+    public List<Analysistasks> getAllAnalysistasks(HttpServletRequest request) {
         Analysistasks analysistasks = new Analysistasks();
-        HttpSession session = req.getSession();
+        HttpSession session = request.getSession();
 
         // ActiveUser user=(ActiveUser)session.getAttribute("activeUser");
         // Integer cid=user.getCompanyId();
 
-        // 需修改
-        int cid = 8;
+        // 获取公司id
+        Companyinfo comi = (Companyinfo) request.getSession().getAttribute("infos");
+        Integer cid = comi.getId();
 
         analysistasks.setCid(cid);
         List<Analysistasks> analysistasks2 = analysistasksService.getAnalysistasks(analysistasks);

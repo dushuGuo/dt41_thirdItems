@@ -141,7 +141,6 @@ public class JsonController {
         String tableName = request.getParameter("tableName");
         String tName = tableName;
         ChineseToPinYin ctp = new ChineseToPinYin();
-
         // 获取公司id
         Companyinfo comi = (Companyinfo) request.getSession().getAttribute("infos");
         Integer cid = comi.getId();
@@ -151,7 +150,6 @@ public class JsonController {
         tableinfo.setCid(cid);
         tableinfo.setPhysicaltablename(pingYin);
         HSSFWorkbook wk = new HSSFWorkbook();
-
         // 设置第一个sheet说明
         HSSFSheet sheet = wk.createSheet("sheet");
         HSSFRow headRow = sheet.createRow(0);
@@ -165,6 +163,7 @@ public class JsonController {
         for (Tablecolumninfo tablecolumninfo : columnNameList) {
             columnName.add(tablecolumninfo.getColumnname());
         }
+        // 设置表头
         for (int i = 0; i < columnName.size(); i++) {
             headRow.createCell(i).setCellValue(columnName.get(i));
         }
@@ -176,19 +175,10 @@ public class JsonController {
                 hssfRow.createCell(j).setCellValue((map.get(ctp.getPingYin(columnName.get(j)))).toString());
             }
         }
-        // for (int i = 0; i < list.size(); i++) {
-        // Row row = sheet.createRow(i);
-        // for (int j = 1; j < list.get(i).size() - 1; j++) {
-        // Cell cell = row.createCell(j);
-        // cell.setCellValue(list.get(i).get(j).toString());
-        // }
-        // }
-
         response.setContentType("application/x-execl;charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment;filename="
                 + new String((tName + ".xls").getBytes(), "ISO-8859-1"));
         OutputStream outputStream = response.getOutputStream();
-
         wk.write(outputStream);
         outputStream.flush();
         outputStream.close();
