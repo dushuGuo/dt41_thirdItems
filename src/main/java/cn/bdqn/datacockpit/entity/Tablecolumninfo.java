@@ -1,5 +1,8 @@
 package cn.bdqn.datacockpit.entity;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Tablecolumninfo {
     private Integer id;
 

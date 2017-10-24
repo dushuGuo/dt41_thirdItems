@@ -1,10 +1,17 @@
 package cn.bdqn.datacockpit.controller;
 
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -12,9 +19,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +33,7 @@ import cn.bdqn.datacockpit.entity.Result;
 import cn.bdqn.datacockpit.entity.Tablecolumninfo;
 import cn.bdqn.datacockpit.entity.Tableinfo;
 import cn.bdqn.datacockpit.entity.Userinfo;
+import cn.bdqn.datacockpit.service.AdminTilesService;
 import cn.bdqn.datacockpit.service.AnalysistasksService;
 import cn.bdqn.datacockpit.service.CompanyinfoService;
 import cn.bdqn.datacockpit.service.DatarelationService;
@@ -39,7 +44,7 @@ import cn.bdqn.datacockpit.service.TableinfoService;
 import cn.bdqn.datacockpit.service.UserinfoService;
 import cn.bdqn.datacockpit.service.impl.UserRoleServiceImpl;
 import cn.bdqn.datacockpit.utils.ChineseToPinYin;
-import cn.bdqn.datacockpit.utils.JdbcUtil;
+import cn.bdqn.datacockpit.utils.JdbcUtils_40;
 
 @Controller
 public class AdminTilesController {
@@ -70,9 +75,17 @@ public class AdminTilesController {
     @Autowired
     private TablecolumninfoService tcs;
 
+    @Autowired
+    private AdminTilesService adminTilesService;
+
     @RequestMapping("/admin_index")
     public String index(Model model) {
         return "admin_index.page";
+    }
+
+    @RequestMapping("/admin_pass")
+    public String index1(Model model) {
+        return "admin_pass.page";
     }
 
     @RequestMapping("/admin_tongzhi1")
@@ -347,7 +360,8 @@ public class AdminTilesController {
      * @throws Exception
      */
     @RequestMapping("/admin_cominfo")
-    public String cominfo() {
+    public String cominfo(Model model) {
+        model.addAttribute("menus", "3");
         return "admin_cominfo.page";
     }
 
@@ -395,30 +409,7 @@ public class AdminTilesController {
         String No1Id = (String) req.getSession().getAttribute("No1");
         String[] attr = id.split(",");
         ChineseToPinYin ctp = new ChineseToPinYin();
-        Map<String, Object> map = new HashMap<String, Object>();
-        Map<String, Object> mapChina = new HashMap<String, Object>();
-        String tbName = null;
-        for (int i = 0; i < attr.length; i++) {
-            if (i == 0) {
-                // 存图形id
-                map.put("shows", attr[0]);
-            } else if (i == 1) {
-                HttpSession session = req.getSession();
-                // 拼接新建表名为用户id+表明（防止重名）
-                tbName = No1Id + ctp.getPingYin(attr[1]);
-            } else if (2 * i - 1 <= attr.length) {
-                // 存 字段名 和 字段类型
-                map.put(ctp.getPingYin(attr[2 * i - 2]), attr[2 * i - 1]);
-                mapChina.put(ctp.getPingYin(attr[2 * i - 2]), attr[2 * i - 2]);
-            }
-        }
-
-        JdbcUtil creats = new JdbcUtil();
-        ApplicationContext context = creats.getContext();
-        context = new ClassPathXmlApplicationContext("spring-common.xml");
-        JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
-        creats.createTable(jt, tbName, map, mapChina);
-
+        String tbName = No1Id + ctp.getPingYin(attr[1]);
         Date dt = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String date = sdf.format(dt);
@@ -427,15 +418,13 @@ public class AdminTilesController {
         record.setUpdatetime(date);
         record.setShowtype(attr[0]);
         record.setPhysicaltablename(tbName);
-        HttpSession session = req.getSession();
-        String ids = (String) session.getAttribute("No1");
-        Integer cid = Integer.parseInt(ids);
+        Integer cid = Integer.parseInt(No1Id);
         record.setCid(cid);
         ts.insert(record);
+        Tableinfo tableinfo = ts.selectPrimaryKey(record);
 
-        Map<String, String> maps = new HashMap<String, String>();
-        maps.put("flag", "1");
-        return maps;
+        return adminTilesService.creats(attr, No1Id, req, tbName, tableinfo);
+
     }
 
     /**
@@ -444,30 +433,74 @@ public class AdminTilesController {
      * @param model
      * @param req
      * @return
+     * @throws Exception
      */
     @RequestMapping("/admin_shujus")
-    public String shuju3(Model model, HttpServletRequest req) {
+    public String shuju3(Model model, HttpServletRequest req) throws Exception {
+        Properties pro = new Properties();
+        // 获取jdbc配置文件内容。
+        InputStream ips = JdbcUtils_40.class.getClassLoader().getResourceAsStream("jdbc.properties");
+        pro.load(ips);
+        String driver = pro.getProperty("jdbc.driver");
+        String localhost = pro.getProperty("jdbc.url");
+        String username = pro.getProperty("jdbc.username");
+        String password = pro.getProperty("jdbc.password");
+        // 2、加载驱动
+        Class.forName(driver);
+        // 3、通过java代码连接上数据库(ip、3306、username、password)
+        Connection conn = DriverManager.getConnection(localhost, username, password);
+        // 4、书写sql语句，执行sql语句，接收结果
 
-        String infoId = req.getParameter("infoId");
-        Tableinfo tableinfo = ts.selectByPrimaryKey(Integer.parseInt(infoId));
-        String tableName = tableinfo.getPhysicaltablename();
-        List<Tablecolumninfo> TablecolumninfoList = tcs.selectView(tableName);
-        TablecolumninfoList.get(0).setColumnname("序号");
-        HttpSession session = req.getSession();
-        session.setAttribute("TablecolumninfoList", TablecolumninfoList);
+        ChineseToPinYin ctpy = new ChineseToPinYin();
+        String tableName = req.getParameter("id");
+        String tableId = req.getParameter("infoId");
+        System.out.println("表的名字是:" + tableName);
+        System.out.println("公司id是:" + tableId);
+        String tableAllName = tableId + ctpy.getPingYin(tableName);
+        System.out.println("表的拼音是:" + tableAllName);
+        String sql = "select * from " + tableAllName;
 
-        model.addAttribute("menus", "3");
-        String names = req.getParameter("id");
-
-        ChineseToPinYin ctp = new ChineseToPinYin();
-        String name = ctp.getPingYin(names);
-        model.addAttribute("name2", names);
-        model.addAttribute("name1", name);
-
-        JdbcUtil jdbc1 = new JdbcUtil();
-        ApplicationContext context = jdbc1.getContext();
-        context = new ClassPathXmlApplicationContext("spring-common.xml");
-        JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
+        PreparedStatement stmt;
+        stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery(sql);
+        ResultSetMetaData data = rs.getMetaData();
+        List list = new ArrayList();
+        int columnCount = 0;
+        for (int i = 1; i <= data.getColumnCount(); i++) {
+            // 获得所有列的数目及实际列数
+            columnCount = data.getColumnCount();
+            // 获得指定列的列名
+            String columnName = data.getColumnName(i);
+            System.out.println("第" + i + "列的列名是:" + columnName);
+            list.add(columnName);
+        }
+        for (Object lists : list) {
+            System.out.println(lists);
+        }
+        System.out.println("总列数是=" + columnCount);
+        req.getSession().setAttribute("tableColumn", list);
+        // String infoId = req.getParameter("infoId");
+        // Tableinfo tableinfo =
+        // ts.selectByPrimaryKey(Integer.parseInt(infoId));
+        // String tableName = tableinfo.getPhysicaltablename();
+        // List<Tablecolumninfo> TablecolumninfoList =
+        // tcs.selectView(tableName);
+        // TablecolumninfoList.get(0).setColumnname("序号");
+        // HttpSession session = req.getSession();
+        // session.setAttribute("TablecolumninfoList", TablecolumninfoList);
+        //
+        // model.addAttribute("menus", "3");
+        // String names = req.getParameter("id");
+        //
+        // ChineseToPinYin ctp = new ChineseToPinYin();
+        // String name = ctp.getPingYin(names);
+        // model.addAttribute("name2", names);
+        // model.addAttribute("name1", name);
+        //
+        // JdbcUtil jdbc1 = new JdbcUtil();
+        // ApplicationContext context = jdbc1.getContext();
+        // context = new ClassPathXmlApplicationContext("spring-common.xml");
+        // JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
 
         return "admin_shujus.page";
     }
@@ -623,4 +656,24 @@ public class AdminTilesController {
         return datarelationService.updateByPrimaryKeySelective(datarlation);
     }
 
+    /**
+     * 
+     * Description: <br/>
+     * 
+     * @author shuY
+     * @param ma
+     * @param id
+     * @param option
+     * @return
+     */
+    @RequestMapping("/shujus_updatebyid")
+    @ResponseBody
+    public Integer shujus_updatebyid(Integer id, Integer option) {
+        Tableinfo tableinfo = new Tableinfo();
+        tableinfo.setId(id);
+        tableinfo.setState(option);
+        System.out.println(tableinfo);
+        System.out.println(option);
+        return ts.shujus_updatebyid(tableinfo);
+    }
 }

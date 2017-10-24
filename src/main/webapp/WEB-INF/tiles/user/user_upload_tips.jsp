@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
 	String context = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+context+"/";
@@ -10,10 +11,9 @@
 <base href="<%=basePath %>">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>退出登录</title>
+  <title>上传结果页面</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <meta http-equiv="refresh" content="3;./login.jsp">
  <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="<%=basePath %>/resource/css/bootstrap.min.css">
   <!-- Font Awesome -->
@@ -34,42 +34,18 @@
 	<script src="<%=basePath %>/resource/js/icheck.min.js"></script>
 	<script src="<%=basePath %>/resource/js/gVerify.js"></script>
 </head>
-<body class="hold-transition register-page">
+ <body>
     <center>
-        <div class="alert alert-success alert-dismissible" style="width: 300px;height: 140px;margin-top:200px">
+        <div class="alert alert-success alert-dismissible" style="width: 300px;height: auto">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <h4>提示</h4>
-                   <p>您已经成功退出登录</p>
-                   <p><span>3</span>秒钟之后将为您跳转到登录页面</p>
-                   <p>如不跳转,请点击<a href="<%=basePath %>login.jsp">这里</a></p>
-                    
+                <ul>
+	                <c:forEach items="${tipinfo }" var="info">
+	                	<li style="list-style-type:none">${info }</li>
+	                </c:forEach>
+                </ul>
+                   <a href="javascript:void(0)" onclick="javascript :history.back(-1);">点此返回</a>
         </div>
-     </center>
-  </body>
-  	<script type="text/javascript">
-		$(document).ready(function(){
-			var a=2;
-			function auto() {
-	setInterval(function() {
-
-if(a==0){
-	window.location.href="<%=basePath %>login.jsp";
-	return;
-}else{
-	
-$("span").html(a);
-	
-	a--;
-	
-}
-			
-		}, 1000);
-	}
-	auto();
-			
-			
-			
-		})
-		
-	</script>
-  </html>
+    </center>
+ </body>
+</html>

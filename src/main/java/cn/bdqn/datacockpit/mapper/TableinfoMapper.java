@@ -18,4 +18,10 @@ public interface TableinfoMapper {
     int updateByPrimaryKeySelective(Tableinfo record);
 
     int updateByPrimaryKey(Tableinfo record);
+
+    Tableinfo selectPrimaryKey(Tableinfo record);
+
+    // 个人修改。
+    Integer shujus_updatebyid(Tableinfo record);
+
 }

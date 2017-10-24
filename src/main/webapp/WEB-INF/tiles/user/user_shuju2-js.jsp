@@ -55,7 +55,7 @@ $("#ok_10").click(function(){
 	      "columnDefs": [
 	 					{
 	 	    		   "targets": 3,
-	 	    		   "render":function(data, type, row, meta) { return '<button type="button" class="btn btn-primary btn-lg uploads" data-toggle="modal" data-target="#myModal2" data-whatever="@jason" style="width: 80px;height: 20px;font-size: 10px;line-height: 0px" onclick="pop1(\''+row.name+'\')">上传数据</button>&emsp;&emsp;&emsp;&emsp;&emsp;<a href="./user_shuju3.shtml?id='+row.name+'&infoId='+row.id+'"><button type="button" class="btn btn-primary btn-lg searches" data-toggle="modal" data-target="#myModal2" data-whatever="@jason" style="width: 80px;height: 20px;font-size: 10px;line-height: 0px" onclick="pop2()">查看数据</button></a>'; } 
+	 	    		   "render":function(data, type, row, meta) { return '<button type="button" class="btn btn-primary btn-lg uploads" data-toggle="modal" data-target="#myModal2" data-whatever="@jason" style="width: 80px;height: 20px;font-size: 10px;line-height: 0px" onclick="pop1(\''+row.name+'\')">上传数据</button>&emsp;&emsp;&emsp;&emsp;&emsp;<a href="./user_shuju3.shtml?id='+row.name+'&infoId='+row.id+(row.state==0?('"><button type="button" disabled="disabled" class="btn btn-primary btn-lg searches" data-toggle="modal" data-target="#myModal2" data-whatever="@jason" style="width: 80px;height: 20px;font-size: 10px;line-height: 0px" onclick="pop2()">查看数据</button></a>'):('"><button type="button" class="btn btn-primary btn-lg searches" data-toggle="modal" data-target="#myModal2" data-whatever="@jason" style="width: 80px;height: 20px;font-size: 10px;line-height: 0px" onclick="pop2()">查看数据</button></a>'));} 
 	 					}
 	 					]
 	});

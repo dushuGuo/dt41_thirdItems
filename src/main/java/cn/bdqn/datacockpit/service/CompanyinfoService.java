@@ -78,6 +78,14 @@ public interface CompanyinfoService {
     int selectPhoneNum(String phone);
 
     /**
+     * 根据email查注册邮箱是否存在
+     * 
+     * @param phone
+     * @return
+     */
+    int selectEmailNum(String email);
+
+    /**
      * wb
      * 
      * @return

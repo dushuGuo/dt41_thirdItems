@@ -89,7 +89,7 @@
 		<property name="deleteInvalidSessions" value="true"></property>
 		<property name="sessionIdCookie" ref="simpleCookie" />
 	</bean>
-	
+
 	<bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
 		<constructor-arg name="name" value="shiro.sesssion" />
 		<property name="path" value="/" />

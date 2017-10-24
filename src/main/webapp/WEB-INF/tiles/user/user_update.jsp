@@ -60,7 +60,7 @@
       </div>
       <div class="form-group has-feedback" style="margin-top: 30px">
         <sapn style="display: block;margin-bottom: -30px">邮箱地址： </sapn>
-            <input type="email" class="form-control" style="width: 270px;margin-left: 85px"  name="email" value="${comp.email }">
+            <input type="email" class="form-control" disabled="disabled" style="width: 270px;margin-left: 85px"  name="email" value="${comp.email }">
         <span style="display: block;margin-top: -30px;margin-left: 320px">
             <img src="resource/images/ios7-email.png" style="width: 27px;height: 25px">
         </span>

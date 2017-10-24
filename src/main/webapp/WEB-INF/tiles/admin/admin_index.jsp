@@ -102,8 +102,8 @@
 			</div>
 			<!-- /.box-body -->
 			<div class="box-footer clearfix">
-				<a href="javascript:void(0)"
-					class="btn btn-sm btn-default btn-flat pull-right">more >></a>
+				<a href="./admin_tongzhi1.shtml"
+					class="btn btn-sm btn-default btn-flat pull-right">more</a>
 			</div>
 			<!-- /.box-footer -->
 		</div>

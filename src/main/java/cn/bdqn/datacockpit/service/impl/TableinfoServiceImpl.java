@@ -44,11 +44,20 @@ public class TableinfoServiceImpl implements TableinfoService {
         return tm.insert(record);
     }
 
-	@Override
-	public Tableinfo selectByPrimaryKey(Integer id) {
-		return tm.selectByPrimaryKey(id);
-	}
-    
-    
+    @Override
+    public Tableinfo selectByPrimaryKey(Integer id) {
+        return tm.selectByPrimaryKey(id);
+    }
 
+    @Override
+    public Tableinfo selectPrimaryKey(Tableinfo record) {
+
+        return tm.selectPrimaryKey(record);
+    }
+
+    @Override
+    public Integer shujus_updatebyid(Tableinfo record) {
+
+        return tm.shujus_updatebyid(record);
+    }
 }

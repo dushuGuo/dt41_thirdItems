@@ -18,7 +18,7 @@
       <div class="form-group has-feedback" id="ddd1">
 
         <sapn style="display: block;margin-bottom: -30px">原密码： </sapn>
-              <input type="text" class="form-control" style="width: 270px;margin-left: 85px"   name="oldPassword">
+              <input type="password" class="form-control" style="width: 270px;margin-left: 85px"   name="oldPassword">
       </div>
       <div class="form-group has-feedback" style="margin-top: 30px">
 

@@ -16,6 +16,9 @@
   <select id="selectAll" resultMap="BaseResultMap" parameterType="Integer">
   		SELECT * FROM `tableinfo` where cid=#{id } order by id desc
   </select>
+  <select id="selectPrimaryKey" resultType="cn.bdqn.datacockpit.entity.Tableinfo" parameterType="cn.bdqn.datacockpit.entity.Tableinfo">
+        select id from  tableinfo where cid=#{cid} and physicalTableName=#{physicaltablename}
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -117,4 +120,10 @@
       showtype = #{showtype,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 个人修改 -->
+  	<update id="shujus_updatebyid" parameterType="cn.bdqn.datacockpit.entity.Tableinfo">
+  		 UPDATE `tableinfo` SET state=#{state} WHERE id = #{id}
+  	</update>
+  
 </mapper>

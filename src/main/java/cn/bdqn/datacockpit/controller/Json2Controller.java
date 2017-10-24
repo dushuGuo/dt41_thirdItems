@@ -75,8 +75,7 @@ public class Json2Controller {
      */
     @ResponseBody
     @RequestMapping(value = "shuju_3")
-    public Map<String, Object> datatable3(@IsSearchCondition SearchCondition searchCondition,
-            HttpServletRequest request) {
+    public Map<String, Object> datatable3(@IsSearchCondition SearchCondition searchCondition, HttpServletRequest request) {
 
         HttpSession session = request.getSession();
 
@@ -116,6 +115,12 @@ public class Json2Controller {
         int cid = 8;
 
         List<Tableinfo> lists = ts.selectAll(cid);
+        for (Tableinfo tableinfo : lists) {
+            String uTime = tableinfo.getUpdatetime();
+            String[] upTime = uTime.split("\\.");
+            System.out.println(upTime[0]);
+            tableinfo.setUpdatetime(upTime[0]);
+        }
         list.setData(lists);
         return list;
     }
