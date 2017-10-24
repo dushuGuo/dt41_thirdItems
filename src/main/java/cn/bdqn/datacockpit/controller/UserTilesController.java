@@ -55,7 +55,7 @@ public class UserTilesController {
     /**
      * 
      * Description: 转发到用户首页<br/>
-     *
+     * 
      * @author dengJ
      * @param model
      * @return
@@ -68,7 +68,7 @@ public class UserTilesController {
     /**
      * 
      * Description: 取通知信息和系统信息并重定向到user_index<br/>
-     *
+     * 
      * @author dengJ
      * @param req
      * @return
@@ -133,53 +133,7 @@ public class UserTilesController {
         String info = uploadExcelserviceImpl.upload(request, file);
         model.addAttribute("tipinfo", info);
         return "user_shuju2.pages";
-        // String uploadFilePath =
-        // request.getSession().getServletContext().getRealPath("upload" +
-        // File.separator)
-        // + File.separator;
-        // FileItemFactory factory = new DiskFileItemFactory();
-        // ServletFileUpload upload = new ServletFileUpload(factory);
-        // List<FileItem> fileItemList = upload.parseRequest(request);
-        // String tableName = null;
-        // for (FileItem item : fileItemList) {
-        // if (!item.isFormField()) {
-        // String fileName = item.getName();
-        // uploadFilePath = uploadFilePath + fileName;
-        // System.out.println(uploadFilePath);
-        // File file = new File(uploadFilePath);
-        // try {
-        // item.write(file);
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-        // } else {
-        // if (item.getFieldName().equals("hidden")) {
-        // tableName = item.getString("UTF-8");
-        // }
-        // }
-        // }
-        //
-        // ChineseToPinYin ctp = new ChineseToPinYin();
-        // // HttpSession session = request.getSession();
-        //
-        // // ActiveUser user=(ActiveUser)session.getAttribute("activeUser");
-        // // Integer cid=user.getCompanyId();
-        // // tableName = cid+ctp.getPingYin(tableName);
-        //
-        // // 需修改
-        // int cid = 8;
-        // tableName = cid + ctp.getPingYin(tableName);
-        // System.out.println(tableName);
-        // ImportExecl poi = new ImportExecl();
-        // List<List<String>> list = poi.read(uploadFilePath);
-        // System.out.println(list);
-        // for (List<String> list2 : list) {
-        // if (xs.getTableList(tableName) >= list2.size()) {
-        // BaseDao baseDao = new BaseDao();
-        // baseDao.setExcel(list2, tableName);
-        // }
-        // }
-        // return "user_shuju2.pages";
+        
     }
 
     // ===============================================================================================
@@ -190,7 +144,8 @@ public class UserTilesController {
      * @return
      */
     @RequestMapping("/user_shuju1")
-    public String shuju1() {
+    public String shuju1(Model model) {
+        model.addAttribute("checks", "shuju1");
         return "user_shuju1.pages";
     }
 
