@@ -72,7 +72,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-<%--             <li class="geren1"><a href="./updateInfo.shtml?phone=${infos.phone }">&emsp;<i class="fa fa-genderless"></i>资料修改</a></li> --%>
+            <li class="geren1"><a href="./updateInfo.shtml?phone=${infos.phone }">&emsp;<i class="fa fa-genderless"></i>资料修改</a></li>
             <li class="geren2"><a href="./updatePassword.shtml">&emsp;<i class="fa fa-genderless"></i>修改密码</a></li>
           </ul>
         </li>

@@ -69,7 +69,8 @@ public class LoginController {
 
     // 验证码
     @RequestMapping(value = "getYzm")
-    public @ResponseBody List<String> getYzm(HttpServletResponse response, HttpServletRequest request) {
+    public @ResponseBody
+    List<String> getYzm(HttpServletResponse response, HttpServletRequest request) {
 
         List<String> lists = new ArrayList<String>();
         try {
@@ -256,7 +257,10 @@ public class LoginController {
     @RequestMapping("/updateInfo")
     public String updateInfo(HttpServletRequest req) {
         HttpSession session = req.getSession();
-        Companyinfo compi = (Companyinfo) session.getAttribute("infos");
+        String phone = req.getParameter("phone");
+
+        Companyinfo compi = companyinfo.selectByPhoneOrEmail(phone);
+
         session.setAttribute("comp", compi);
 
         return "redirect:/user_update.shtml";
