@@ -18,7 +18,7 @@ public class GlobalException implements HandlerExceptionResolver {
         } else {
 
         }
-        mv.setViewName("refuse.jsp");
+        mv.setViewName("refuse.page");
         return mv;
     }
 
