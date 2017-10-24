@@ -21,6 +21,7 @@
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
+          <li><a href="./selectAllCompanyinfo.shtml">返回首页</a></li>
           <li><a href="./updateAdmin.shtml">修改密码</a></li>
           <li><a href="./exit.shtml">退出登录</a></li>
         </ul>
