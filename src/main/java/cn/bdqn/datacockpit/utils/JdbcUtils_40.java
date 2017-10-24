@@ -6,9 +6,23 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class JdbcUtils_40 {
+import org.springframework.beans.factory.InitializingBean;
+
+public class JdbcUtils_40 implements InitializingBean {
 
     private static ConnectionPool connPool = null;
+
+    // @Value("jdbc.driver")
+    // private static String driver;
+    //
+    // @Value("jdbc.url")
+    // private static String url;
+    //
+    // @Value("jdbc.username")
+    // private static String username;
+    //
+    // @Value("jdbc.password")
+    // private static String password;
 
     // static特性：随着类加载而加载，这要这个类加载，JVM的内存里面就有一个ThreadLocal对象，并且这个ThreadLocal对象永远存在，除非JVM退出
     private static ThreadLocal<Connection> tl = new ThreadLocal<Connection>();
@@ -19,8 +33,8 @@ public class JdbcUtils_40 {
             Properties prop = new Properties();
             in = JdbcUtils_40.class.getClassLoader().getResourceAsStream("jdbc.properties");
             prop.load(in);
-            connPool = new ConnectionPool(prop.getProperty("driver"), prop.getProperty("url"),
-                    prop.getProperty("username"), prop.getProperty("password"));
+            connPool = new ConnectionPool(prop.getProperty("jdbc.driver"), prop.getProperty("jdbc.url"),
+                    prop.getProperty("jdbc.username"), prop.getProperty("jdbc.password"));
             connPool.createPool();
         } catch (Exception e) {
             throw new ExceptionInInitializerError(e);
@@ -97,12 +111,22 @@ public class JdbcUtils_40 {
             throw new RuntimeException(e);
         } finally {
             /*
-             * 关闭连接之后，即还给数据库连接池了，还要从ThreadLocal容器里面移除掉这个连接。 如果不移除，会有什么问题？ 有一个线程来执行了转账，ThreadLocal的map集合里面就有一个连接，
-             * 第二个线程又来，ThreadLocal的map集合里面又有一个连接， 第三个线程又来，ThreadLocal的map集合里面又有一个连接，
-             * 而ThreadLocal又是静态的，即整个应用程序周期范围内都存在，那这个容器就会越来越大，最后导致数据溢出。 所以静态的东西要慎用！！！
+             * 关闭连接之后，即还给数据库连接池了，还要从ThreadLocal容器里面移除掉这个连接。 如果不移除，会有什么问题？
+             * 有一个线程来执行了转账，ThreadLocal的map集合里面就有一个连接，
+             * 第二个线程又来，ThreadLocal的map集合里面又有一个连接，
+             * 第三个线程又来，ThreadLocal的map集合里面又有一个连接，
+             * 而ThreadLocal又是静态的，即整个应用程序周期范围内都存在，那这个容器就会越来越大，最后导致数据溢出。
+             * 所以静态的东西要慎用！！！
              */
             tl.remove(); // 千万注意：解除当前线程上绑定的连接(从ThreadLocal容器中移除掉对应当前线程的连接)
         }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+
+        // Auto-generated method stub
+
     }
 
 }

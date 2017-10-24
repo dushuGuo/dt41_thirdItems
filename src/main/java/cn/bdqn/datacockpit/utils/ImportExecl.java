@@ -254,10 +254,9 @@ public class ImportExecl {
      *
      * @author huMZ
      */
-    public String checkExcel(List<Map<String, Object>> excelList, List<Tablecolumninfo> listColumnsType,
+    public List<String> checkExcel(List<Map<String, Object>> excelList, List<Tablecolumninfo> listColumnsType,
             List<Tablecolumninfo> listColumnsName) {
-        boolean flag;
-        StringBuffer message = new StringBuffer("");
+        List<String> message = new ArrayList<String>();
         // 将数据库中表字段类型取出存入list<String>
         List<String> columnTypes = new ArrayList<String>();
         for (Tablecolumninfo tablecolumninfo : listColumnsType) {
@@ -275,20 +274,20 @@ public class ImportExecl {
                                 map.get(columnName).toString().lastIndexOf(".")))
                                 + "");
                     } catch (Exception e) {
-                        message.append("您表中第" + (i + 1) + "行,第" + (j + 1) / listColumnsName.size() + "列信息有误.请检查");
+                        message.add("您表中第" + (i + 2) + "行数据有误.请检查.");
+
                     }
                 } else if (columnType.equals("FLOAT")) {
                     try {
                         Double double1 = Double.parseDouble(map.get(columnName) + "");
                     } catch (Exception e) {
-                        message.append("您表中第" + (i + 2) + "行,第" + (j + 1) / listColumnsName.size() + "列信息有误.请检查");
+                        message.add("您表中第" + (i + 2) + "行数据有误.请检查.");
                     }
                 }
             }
 
         }
-        errorInfo = message.toString();
-        return errorInfo;
+        return message;
     }
 
     /**

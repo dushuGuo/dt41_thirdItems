@@ -63,14 +63,13 @@ public class UploadExcelServiceImpl {
      * @param formula
      * @throws Exception
      */
-    public String upload(HttpServletRequest request, MultipartFile file) throws Exception {
-        StringBuffer message = new StringBuffer();
+    public List<String> upload(HttpServletRequest request, MultipartFile file) throws Exception {
+        // 创建提示信息集合
+        List<String> message = new ArrayList<String>();
         // 获取公司id
         Companyinfo comi = (Companyinfo) request.getSession().getAttribute("infos");
         Integer cid = comi.getId();
         String companyName = ctpYin.getPingYin(comi.getCorpname());
-        // 创建提示信息字符串
-        String tipInfo = null;
         // 获取文件名
         String fileName = file.getOriginalFilename();
         List<Map<String, Object>> excelList = new ArrayList<Map<String, Object>>();
@@ -96,26 +95,24 @@ public class UploadExcelServiceImpl {
                 if (importExecl.columnIsMatches(listTitle, listColumnsName)) {
                     // 获取excel表中所有数据
                     excelList = importExecl.getExceList(importExecl.getWorkbook(file));
-                    message.append(importExecl.checkExcel(excelList, listColumnsType, listColumnsName));
+                    message.addAll(importExecl.checkExcel(excelList, listColumnsType, listColumnsName));
                 } else {
-                    message.append("上传文件首行字段与模板有区别,请检查");
+                    message.add("上传文件首行字段与模板有区别,请检查");
                 }
 
             } else {
-                message.append("excel文件名与表名不匹配,请检查");
+                message.add("excel文件名与表名不匹配,请检查");
             }
 
         } else {
-            message.append("上传文件不是excel文件,请检查");
+            message.add("上传文件不是excel文件,请检查");
         }
-        if (message.toString().equals("")) {
+        if (message.size() == 0) {
             jdbcUtil.insertIntoTable(tableName, excelList);
-            tipInfo = "数据已上传成功";
+            message.add("数据已上传成功");
             importExecl.uploadExcel(request, file, companyName);
-        } else {
-            tipInfo = message.toString();
         }
-        return tipInfo;
+        return message;
 
     }
 }

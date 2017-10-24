@@ -10,16 +10,16 @@ package cn.bdqn.datacockpit.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +32,11 @@ import cn.bdqn.datacockpit.datatable.SearchCondition;
 import cn.bdqn.datacockpit.entity.Company;
 import cn.bdqn.datacockpit.entity.Companyinfo;
 import cn.bdqn.datacockpit.entity.Info;
+import cn.bdqn.datacockpit.entity.Tablecolumninfo;
+import cn.bdqn.datacockpit.entity.Tableinfo;
 import cn.bdqn.datacockpit.entity.Userinfo;
+import cn.bdqn.datacockpit.mapper.TablecolumninfoMapper;
+import cn.bdqn.datacockpit.mapper.TableinfoMapper;
 import cn.bdqn.datacockpit.service.CompanyService;
 import cn.bdqn.datacockpit.service.CompanyinfoService;
 import cn.bdqn.datacockpit.service.InfoService;
@@ -58,9 +62,18 @@ public class JsonController {
 
     @Autowired
     private CompanyService companyService;
-    
+
     @Autowired
     private CompanyinfoService companyinfoService;
+
+    @Autowired
+    private TablecolumninfoMapper tablecolumninfoMapper;
+
+    @Autowired
+    private TableinfoMapper tableinfoMapper;
+
+    @Autowired
+    private Tableinfo tableinfo;
 
     @RequestMapping(value = "dt_list")
     public DatatableResult<Userinfo> datatable(@IsSearchCondition SearchCondition searchCondition) {
@@ -87,7 +100,7 @@ public class JsonController {
         return list;
     }
 
-//============================================================================================    
+    // ============================================================================================
     /***
      * 
      * @param searchCondition:使用datatable获取companyInfo信息
@@ -101,8 +114,7 @@ public class JsonController {
         list.setData(list2);
         return list;
     }
-    
-    
+
     /***
      * 
      * @param searchCondition:使用datatable获取companyInfo信息
@@ -116,7 +128,7 @@ public class JsonController {
         list.setData(list2);
         return list;
     }
-    
+
     /**
      * 
      * @Description (用户——导出数据)
@@ -124,45 +136,62 @@ public class JsonController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value="/excle")
-    public void excle(HttpServletRequest request,HttpServletResponse response) throws IOException{
+    @RequestMapping(value = "/excle")
+    public void excle(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String tableName = request.getParameter("tableName");
         String tName = tableName;
         ChineseToPinYin ctp = new ChineseToPinYin();
-        HttpSession session = request.getSession();
 
-//      ActiveUser user=(ActiveUser)session.getAttribute("activeUser");
-//      Integer cid=user.getCompanyId();
-        
-        //需修改
-        String cid = "8";
-        
-        String pingYin =cid+ctp.getPingYin(tableName);
+        // 获取公司id
+        Companyinfo comi = (Companyinfo) request.getSession().getAttribute("infos");
+        Integer cid = comi.getId();
+        // 获取用户需要导出的表的表名
+        String pingYin = cid + ctp.getPingYin(tableName);
         BaseDao base = new BaseDao();
-        
-        HSSFWorkbook wk  = new HSSFWorkbook();
-        
-        //设置第一个sheet说明
-        Sheet sheet = wk.createSheet("sheet");
-        
-        List<List<Object>> list = base.getExcel(pingYin);
+        tableinfo.setCid(cid);
+        tableinfo.setPhysicaltablename(pingYin);
+        HSSFWorkbook wk = new HSSFWorkbook();
 
+        // 设置第一个sheet说明
+        HSSFSheet sheet = wk.createSheet("sheet");
+        HSSFRow headRow = sheet.createRow(0);
+        Tableinfo tinfo = tableinfoMapper.selectPrimaryKey(tableinfo);
+        Integer tid = tinfo.getId();
+        // 获取该表所有数据
+        List<Map<String, Object>> list = base.getTableList(pingYin);
+        // 查询该表字段名存储至list<String>中
+        List<Tablecolumninfo> columnNameList = tablecolumninfoMapper.selectColumnName(tid);
+        List<String> columnName = new ArrayList<String>();
+        for (Tablecolumninfo tablecolumninfo : columnNameList) {
+            columnName.add(tablecolumninfo.getColumnname());
+        }
+        for (int i = 0; i < columnName.size(); i++) {
+            headRow.createCell(i).setCellValue(columnName.get(i));
+        }
+        // 遍历表数据输出至excel表
         for (int i = 0; i < list.size(); i++) {
-            Row row = sheet.createRow(i);
-            for (int j = 1; j < list.get(i).size()-1; j++) {
-                Cell cell = row.createCell(j);
-                cell.setCellValue(list.get(i).get(j).toString());
+            HSSFRow hssfRow = sheet.createRow(sheet.getLastRowNum() + 1);
+            Map<String, Object> map = list.get(i);
+            for (int j = 0; j < columnName.size(); j++) {
+                hssfRow.createCell(j).setCellValue((map.get(ctp.getPingYin(columnName.get(j)))).toString());
             }
         }
-        
+        // for (int i = 0; i < list.size(); i++) {
+        // Row row = sheet.createRow(i);
+        // for (int j = 1; j < list.get(i).size() - 1; j++) {
+        // Cell cell = row.createCell(j);
+        // cell.setCellValue(list.get(i).get(j).toString());
+        // }
+        // }
+
         response.setContentType("application/x-execl;charset=UTF-8");
-        response.setHeader("Content-Disposition", "attachment;filename=" + new String((tName+".xls").getBytes(), "ISO-8859-1"));
+        response.setHeader("Content-Disposition", "attachment;filename="
+                + new String((tName + ".xls").getBytes(), "ISO-8859-1"));
         OutputStream outputStream = response.getOutputStream();
-        
+
         wk.write(outputStream);
         outputStream.flush();
         outputStream.close();
-        
-        
+
     }
 }

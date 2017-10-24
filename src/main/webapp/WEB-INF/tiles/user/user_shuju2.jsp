@@ -65,6 +65,7 @@
             <input class="ups3"  type="button" value="浏览" onclick="path.click()" style="border:1px solid #ccc;background:#fff">  
             <input class="ups2" type="file" id="path" name="file" style="display:none" onchange="upfile.value=this.value">
             <input type="hidden" name="hidden" />
+            <p>*只能上传excel文件,文件大小需要小于2M,文件名需与表名一致!</p>
          </center>   
          </div>
 

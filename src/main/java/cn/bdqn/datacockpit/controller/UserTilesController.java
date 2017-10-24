@@ -130,10 +130,9 @@ public class UserTilesController {
      */
     @RequestMapping("/user_uploads")
     public String upload(Model model, HttpServletRequest request, @RequestParam MultipartFile file) throws Exception {
-        String info = uploadExcelserviceImpl.upload(request, file);
+        List<String> info = uploadExcelserviceImpl.upload(request, file);
         model.addAttribute("tipinfo", info);
-        return "user_shuju2.pages";
-        
+        return "user_upload_tips.pages";
     }
 
     // ===============================================================================================
