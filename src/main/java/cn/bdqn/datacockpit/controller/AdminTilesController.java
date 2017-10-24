@@ -360,7 +360,8 @@ public class AdminTilesController {
      * @throws Exception
      */
     @RequestMapping("/admin_cominfo")
-    public String cominfo() {
+    public String cominfo(Model model) {
+        model.addAttribute("menus", "3");
         return "admin_cominfo.page";
     }
 
@@ -658,7 +659,7 @@ public class AdminTilesController {
     /**
      * 
      * Description: <br/>
-     *
+     * 
      * @author shuY
      * @param ma
      * @param id
