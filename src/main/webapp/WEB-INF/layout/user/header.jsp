@@ -39,7 +39,7 @@
           <img src="dist/img/yonghu.png" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>${infos.name }&emsp;${infos.job }</p>
+          <p>${infos.name }&emsp;${infos.job }(${infos.corpname })</p>
           
           <!-- Status -->
           <!-- <a href="#"><i class="fa fa-circle text-success"></i> Online</a> -->
