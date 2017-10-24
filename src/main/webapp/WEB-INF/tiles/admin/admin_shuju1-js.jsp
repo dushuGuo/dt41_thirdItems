@@ -21,7 +21,7 @@
 	      "columnDefs": [
 		 					{
 		 	    		   "targets": 3,
-		 	    		   "render":function(data, type, row, meta) { return '<a href="./admin_shujus.shtml?id='+row.name+'&infoId='+row.cid+'" style="color:white"><button class="btn btn-primary btn-lg" data-toggle="modal" style="width: 110px;height: 20px;font-size: 13px;line-height: 0px">查看数据</button></a>&emsp;<select id="ableOrDisable" onchange="changeon('+row.id+',this.value)" ><option value="1">已启用</option><option value="0">已禁用</option></select>'; } 
+		 	    		   "render":function(data, type, row, meta) { return '<a href="./admin_shujus.shtml?id='+row.name+'&infoId='+row.cid+'" style="color:white"><button class="btn btn-primary btn-lg" data-toggle="modal" style="width: 110px;height: 20px;font-size: 13px;line-height: 0px">查看数据</button></a>&emsp;<select id="ableOrDisable" onchange="changeon('+row.id+(row.state==0?(',this.value)" ><option value="0">已禁用</option><option value="1">已启用</option></select>'):(',this.value)" ><option value="1">已启用</option><option value="0">已禁用</option></select>')); } 
 		 					}
 		 					]
 	      
