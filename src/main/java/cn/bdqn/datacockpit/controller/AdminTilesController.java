@@ -406,24 +406,26 @@ public class AdminTilesController {
     @ResponseBody
     @RequestMapping("/admin_create")
     public Map<String, String> creats(@RequestParam("values") String id, HttpServletRequest req) {
-        String No1Id = (String) req.getSession().getAttribute("No1");
+        String comid = (String) req.getSession().getAttribute("No1");
         String[] attr = id.split(",");
         ChineseToPinYin ctp = new ChineseToPinYin();
-        String tbName = No1Id + ctp.getPingYin(attr[1]);
+        String tbName = comid + ctp.getPingYin(attr[1]);
         Date dt = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String date = sdf.format(dt);
+        // 将表信息存入表信息表
         Tableinfo record = new Tableinfo();
         record.setName(attr[1]);
         record.setUpdatetime(date);
         record.setShowtype(attr[0]);
         record.setPhysicaltablename(tbName);
-        Integer cid = Integer.parseInt(No1Id);
+        Integer cid = Integer.parseInt(comid);
         record.setCid(cid);
         ts.insert(record);
+        // 查询表id
         Tableinfo tableinfo = ts.selectPrimaryKey(record);
 
-        return adminTilesService.creats(attr, No1Id, req, tbName, tableinfo);
+        return adminTilesService.creats(attr, cid, req, tbName, tableinfo);
 
     }
 
@@ -479,29 +481,6 @@ public class AdminTilesController {
         }
         System.out.println("总列数是=" + columnCount);
         req.getSession().setAttribute("tableColumn", list);
-        // String infoId = req.getParameter("infoId");
-        // Tableinfo tableinfo =
-        // ts.selectByPrimaryKey(Integer.parseInt(infoId));
-        // String tableName = tableinfo.getPhysicaltablename();
-        // List<Tablecolumninfo> TablecolumninfoList =
-        // tcs.selectView(tableName);
-        // TablecolumninfoList.get(0).setColumnname("序号");
-        // HttpSession session = req.getSession();
-        // session.setAttribute("TablecolumninfoList", TablecolumninfoList);
-        //
-        // model.addAttribute("menus", "3");
-        // String names = req.getParameter("id");
-        //
-        // ChineseToPinYin ctp = new ChineseToPinYin();
-        // String name = ctp.getPingYin(names);
-        // model.addAttribute("name2", names);
-        // model.addAttribute("name1", name);
-        //
-        // JdbcUtil jdbc1 = new JdbcUtil();
-        // ApplicationContext context = jdbc1.getContext();
-        // context = new ClassPathXmlApplicationContext("spring-common.xml");
-        // JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
-
         return "admin_shujus.page";
     }
 

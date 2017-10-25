@@ -17,7 +17,7 @@
   		SELECT * FROM `tableinfo` where cid=#{id } order by id desc
   </select>
   <select id="selectPrimaryKey" resultType="cn.bdqn.datacockpit.entity.Tableinfo" parameterType="cn.bdqn.datacockpit.entity.Tableinfo">
-        select id from  tableinfo where cid=#{cid} and physicalTableName=#{physicaltablename}
+        select * from  tableinfo where cid=#{cid} and physicalTableName=#{physicaltablename}
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 

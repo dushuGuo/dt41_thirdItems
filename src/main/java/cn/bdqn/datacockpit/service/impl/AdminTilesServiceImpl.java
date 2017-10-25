@@ -10,6 +10,7 @@
 package cn.bdqn.datacockpit.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import cn.bdqn.datacockpit.entity.Tablecolumninfo;
 import cn.bdqn.datacockpit.entity.Tableinfo;
 import cn.bdqn.datacockpit.mapper.TablecolumninfoMapper;
+import cn.bdqn.datacockpit.mapper.TableinfoMapper;
 import cn.bdqn.datacockpit.service.AdminTilesService;
 import cn.bdqn.datacockpit.utils.ChineseToPinYin;
 import cn.bdqn.datacockpit.utils.JdbcUtil;
@@ -43,6 +45,9 @@ public class AdminTilesServiceImpl implements AdminTilesService {
     @Autowired
     Tablecolumninfo tablecolumninfo;
 
+    @Autowired
+    TableinfoMapper tableinfoMapper;
+
     public void setTablecolumninfo(Tablecolumninfo tablecolumninfo) {
         this.tablecolumninfo = tablecolumninfo;
     }
@@ -55,13 +60,8 @@ public class AdminTilesServiceImpl implements AdminTilesService {
      *      java.lang.String)
      */
     @Override
-    public Map<String, String> creats(String[] attr, String No1Id, HttpServletRequest req, String tbName,
+    public Map<String, String> creats(String[] attr, Integer cid, HttpServletRequest req, String tbName,
             Tableinfo tableinfo) {
-        /*
-         * // 获取表字段名,将其存储为字符串以便存入数据库 StringBuffer columnName = new
-         * StringBuffer(); // 获取表字段数据类型,将其存储为字符串以便存入数据库 StringBuffer columnType
-         * = new StringBuffer();
-         */
         ChineseToPinYin ctp = new ChineseToPinYin();
         Map<String, Object> map = new HashMap<String, Object>();
         Map<String, Object> mapChina = new HashMap<String, Object>();
@@ -85,12 +85,15 @@ public class AdminTilesServiceImpl implements AdminTilesService {
                 tablecolumninfoMapper.insert(tablecolumninfo);
             }
         }
-
+        // 创建新表
+        // 查询表字段名和字段类型
+        Tableinfo tableinfo2 = tableinfoMapper.selectPrimaryKey(tableinfo);
+        List<Tablecolumninfo> list = tablecolumninfoMapper.selectColumnInfo(tableinfo2.getId());
         JdbcUtil creats = new JdbcUtil();
         ApplicationContext context = creats.getContext();
         context = new ClassPathXmlApplicationContext("spring-common.xml");
         JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
-        creats.createTable(jt, tbName, map, mapChina);
+        creats.createTable(jt, tbName, list);
 
         Map<String, String> maps = new HashMap<String, String>();
         maps.put("flag", "1");

@@ -37,7 +37,7 @@ public interface AdminTilesService {
      * @param tid
      * @return
      */
-    public abstract Map<String, String> creats(String[] attr, String No1Id, HttpServletRequest req, String tbName,
+    public abstract Map<String, String> creats(String[] attr, Integer cid, HttpServletRequest req, String tbName,
             Tableinfo tid);
 
 }
