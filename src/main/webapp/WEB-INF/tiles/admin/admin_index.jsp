@@ -229,7 +229,7 @@
 											<td>${comp.email }</td>
 											<!-- <td><select><option>已启用</option>
 													<option>已禁用</option></select></td> -->
-											<td><a href="#">通过</a>&emsp;<a href="#">不通过</a></td>
+											<td><a href="./adminuss_updatee.shtml?id=${comp.id}" onclick="return ee();" class="btn btn-success btn-rounded btn-small" style="font-size: 14px;">通过</a>&emsp;<a href="./adminus_delete.shtml?id=${comp.id } onclick="return dd();" class="btn btn-danger btn-rounded btn-small" style="font-size: 14px;">不通过</a></td>
 										</tr>
 									</c:forEach>
 									</tbody>
