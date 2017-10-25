@@ -18,9 +18,9 @@
 
 	<!-- 用户手机号或者电子邮箱作为用户名 -->
 	<select id="selectByPanduan" parameterType="string" resultType="string">
-	SELECT phone FROM `userinfo` WHERE phone=#{phone} OR email=#{email}	
+		SELECT phone FROM `userinfo` WHERE phone=#{phone} OR email=#{email}
 	</select>
-	
+
 	<!-- 查询所有权限包括角色 -->
 	<select id="selectByPhone" resultType="map" parameterType="string">
 		SELECT p.`per_name`,p.`url`,role.`role_name`,ui.`phone` FROM
@@ -32,6 +32,11 @@
 		ur.`rid`=role.`id`
 		INNER JOIN `userinfo` ui ON ui.`id`=ur.`uid` AND
 		ui.`phone`=#{phone};
+	</select>
+
+	<!-- 查看序号最末尾值 -->
+	<select id="selectByMaxId" resultType="int">
+		SELECT MAX(id) FROM `userinfo`
 	</select>
 
 	<select id="getRoles" parameterType="String" resultMap="BaseResultMap">

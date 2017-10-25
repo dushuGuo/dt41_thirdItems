@@ -21,6 +21,7 @@
       <div class="navbar-custom-menu">
                  
         <ul class="nav navbar-nav">
+          <li><a href="./user_second.shtml">返回首页</a></li>
           <li><a href="./updatePassword.shtml">修改密码</a></li>
           <li><a href="./exit.shtml">退出登录</a></li>
         </ul>

@@ -11,6 +11,6 @@
       'autoWidth'   : false
     })
   }) */
-	 
-
+//执行一个laydate实例
+  
 </script>

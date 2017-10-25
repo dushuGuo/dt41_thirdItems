@@ -31,6 +31,8 @@ public interface UserinfoService {
 
     int insert(Userinfo record);
 
+    int selectByMaxId();
+
     /**
      * wb 审核通过，往Userinfo表里添加一个用户对象
      */
