@@ -11,19 +11,16 @@
 <base href="<%=basePath %>">
 <!-- Content Header (Page header) -->
 <!-- 折线图的在线Js -->
+  <script src="<%=basePath %>/bower_components/laydate/laydate.js"></script>
+ <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/1-6-10/esl.js"></script> 
+    <script src="/js/jquery-1.8.2.min.js"></script>
 
-<script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/1-6-10/esl.js"></script>
-  <link rel="stylesheet" href="<%=basePath %>/js/easyui.css">
-  <link rel="stylesheet" href="<%=basePath %>/js/icon.css">
-  <script src="<%=basePath %>/js/jquery.easyui.min.js"></script>
-  <script src="<%=basePath %>/js/jquery.min.js"></script>
-  <script src="<%=basePath %>/js/easyui-lang-zh_CN.js"></script>
+
 
    
 <section class="content-header">
 	<h1 style="font-weight: bolder;">快捷菜单</h1>
 </section>
-
 
 
 <!-- Main content -->
@@ -141,14 +138,69 @@
 	</div>
 	<!-- /.box -->
 	<!-- 通知信息以上 -->
-
-	
+	<center><h3>${infos.corpname }数据显示表</h3></center>
+	<center>
+<input type="text" id="test1"  name="begintime">开始时间&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- 开始时间 -->
+<script>
+//执行一个laydate实例
+laydate.render({
+  elem: '#test1' //指定元素
+});
+laydate.render({
+  elem: '#test-n1'
+  ,position: 'static'
+});
+laydate.render({
+  elem: '#test-n2'
+  ,position: 'static'
+  ,lang: 'en'
+});
+laydate.render({
+  elem: '#test-n3'
+  ,type: 'month'
+  ,position: 'static'
+});
+laydate.render({
+  elem: '#test-n4'
+  ,type: 'time'
+  ,position: 'static'
+}); 
+</script>
+<input type="text" id="test2" name="endtime">结束时间&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- 结束时间 -->
+<script>
+//执行一个laydate实例
+laydate.render({
+  elem: '#test2' //指定元素
+});
+laydate.render({
+  elem: '#test-n1'
+  ,position: 'static'
+});
+laydate.render({
+  elem: '#test-n2'
+  ,position: 'static'
+  ,lang: 'en'
+});
+laydate.render({
+  elem: '#test-n3'
+  ,type: 'month'
+  ,position: 'static'
+});
+laydate.render({
+  elem: '#test-n4'
+  ,type: 'time'
+  ,position: 'static'
+}); 
+</script>
+<input type="button" name="button" value="提交">
+</center>	
 <!-- 折线图 -->
  <input type="text" name="shows" value="${infos.id }" hidden>
- <center><input type="text" name="begintime">开始时间 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="endtime">结束时间
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" name="button" value="提交"></center>
+ 
+<%--  <center><input type="text" name="begintime">开始时间 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="endtime">结束时间
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" name="button" value="提交"></center> --%>
 
-<center><h3>${infos.corpname }数据显示表</h3></center>
+
 <div id="main" style="height:400px"></div>
 <script type="text/javascript">
 var myChart;
