@@ -131,7 +131,7 @@
 		</div>
 		<!-- /.box-body -->
 		<div class="box-footer clearfix">
-			<a href="javascript:void(0)"
+			<a href="./selectTongzhi.shtml"
 				class="btn btn-sm btn-default btn-flat pull-right">more >></a>
 		</div>
 		<!-- /.box-footer -->
