@@ -32,6 +32,7 @@ import cn.bdqn.datacockpit.entity.Info;
 import cn.bdqn.datacockpit.entity.Result;
 import cn.bdqn.datacockpit.entity.Tablecolumninfo;
 import cn.bdqn.datacockpit.entity.Tableinfo;
+import cn.bdqn.datacockpit.entity.UserRole;
 import cn.bdqn.datacockpit.entity.Userinfo;
 import cn.bdqn.datacockpit.service.AdminTilesService;
 import cn.bdqn.datacockpit.service.AnalysistasksService;
@@ -254,9 +255,18 @@ public class AdminTilesController {
         Md5Hash md5 = new Md5Hash(password, salt, 2);
         // 加密后
         String md5PassWord = md5.toString();
-        // 存储修改 后的密码
+        // 存储修改后的密码
         record.setPassword(md5PassWord);
+        //
         int flag = us.insertSelective(record);
+        // 角色用户关联表
+        int result = us.selectByMaxId();
+        System.out.println(result);
+        // 创建对象
+        UserRole ur = new UserRole();
+        ur.setUid(result);
+        ur.setRid(2);
+        int result1 = userRoleServiceImpl.insertSelective(ur);
         // 转发
         return "admin_shuju4.page";
     }

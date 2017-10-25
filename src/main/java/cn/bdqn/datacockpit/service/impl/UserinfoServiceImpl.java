@@ -100,8 +100,12 @@ public class UserinfoServiceImpl implements UserinfoService {
 
     @Override
     public String selectByPanduan(String phone) {
-
         return userinfoMapper.selectByPanduan(phone);
+    }
+
+    @Override
+    public int selectByMaxId() {
+        return userinfoMapper.selectByMaxId();
     }
 
 }

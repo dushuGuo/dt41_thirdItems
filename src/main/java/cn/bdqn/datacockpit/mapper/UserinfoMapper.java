@@ -25,6 +25,8 @@ public interface UserinfoMapper {
 
     int updateByPrimaryKey(Userinfo record);
 
+    int selectByMaxId();
+
     /**
      * shiro通过电话号查询用户
      * 
