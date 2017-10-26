@@ -46,4 +46,14 @@ public interface TablecolumninfoMapper {
      * @return
      */
     List<Tablecolumninfo> selectColumnType(Integer tid);
+
+    /**
+     * 
+     * Description:根据表id查询表字段信息 <br/>
+     *
+     * @author huMZ
+     * @param tid
+     * @return
+     */
+    List<Tablecolumninfo> selectColumnInfo(Integer tid);
 }

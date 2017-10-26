@@ -16,4 +16,5 @@ public interface UserRoleMapper {
     int updateByPrimaryKey(UserRole record);
 
     int deleteByUid(int id);
+
 }

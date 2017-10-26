@@ -92,6 +92,27 @@ public class Json2Controller {
 
     /**
      * 
+     * Description:平台管理员查询某张表数据 <br/>
+     *
+     * @author huMZ
+     * @param searchCondition
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "shuju_4")
+    public Map<String, Object> datatable4(@IsSearchCondition SearchCondition searchCondition, HttpServletRequest request) {
+        String name = request.getParameter("id");
+        BaseDao baseDao = new BaseDao();
+        List<List<Object>> excel = baseDao.getExcel(name);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("data", excel);
+
+        return map;
+    }
+
+    /**
+     * 
      * @Description (用户——数据列表页面，显示数据表)
      * @param searchCondition
      * @param req

@@ -36,6 +36,9 @@
   <select id="selectColumnType" resultType="cn.bdqn.datacockpit.entity.Tablecolumninfo" parameterType="java.lang.Integer">
   select columnType from tablecolumninfo where tid=#{tid}
   </select>
+  <select id="selectColumnInfo" resultType="cn.bdqn.datacockpit.entity.Tablecolumninfo" parameterType="java.lang.Integer">
+  select columnName,columnType from tablecolumninfo where tid=#{tid}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tablecolumninfo
     where id = #{id,jdbcType=INTEGER}

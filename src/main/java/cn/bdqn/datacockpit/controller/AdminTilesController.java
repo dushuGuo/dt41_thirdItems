@@ -1,17 +1,9 @@
 package cn.bdqn.datacockpit.controller;
 
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -32,6 +24,7 @@ import cn.bdqn.datacockpit.entity.Info;
 import cn.bdqn.datacockpit.entity.Result;
 import cn.bdqn.datacockpit.entity.Tablecolumninfo;
 import cn.bdqn.datacockpit.entity.Tableinfo;
+import cn.bdqn.datacockpit.entity.UserRole;
 import cn.bdqn.datacockpit.entity.Userinfo;
 import cn.bdqn.datacockpit.service.AdminTilesService;
 import cn.bdqn.datacockpit.service.AnalysistasksService;
@@ -44,7 +37,6 @@ import cn.bdqn.datacockpit.service.TableinfoService;
 import cn.bdqn.datacockpit.service.UserinfoService;
 import cn.bdqn.datacockpit.service.impl.UserRoleServiceImpl;
 import cn.bdqn.datacockpit.utils.ChineseToPinYin;
-import cn.bdqn.datacockpit.utils.JdbcUtils_40;
 
 @Controller
 public class AdminTilesController {
@@ -254,9 +246,18 @@ public class AdminTilesController {
         Md5Hash md5 = new Md5Hash(password, salt, 2);
         // 加密后
         String md5PassWord = md5.toString();
-        // 存储修改 后的密码
+        // 存储修改后的密码
         record.setPassword(md5PassWord);
+        //
         int flag = us.insertSelective(record);
+        // 角色用户关联表
+        int result = us.selectByMaxId();
+        System.out.println(result);
+        // 创建对象
+        UserRole ur = new UserRole();
+        ur.setUid(result);
+        ur.setRid(2);
+        int result1 = userRoleServiceImpl.insertSelective(ur);
         // 转发
         return "admin_shuju4.page";
     }
@@ -406,24 +407,26 @@ public class AdminTilesController {
     @ResponseBody
     @RequestMapping("/admin_create")
     public Map<String, String> creats(@RequestParam("values") String id, HttpServletRequest req) {
-        String No1Id = (String) req.getSession().getAttribute("No1");
+        String comid = (String) req.getSession().getAttribute("No1");
         String[] attr = id.split(",");
         ChineseToPinYin ctp = new ChineseToPinYin();
-        String tbName = No1Id + ctp.getPingYin(attr[1]);
+        String tbName = comid + ctp.getPingYin(attr[1]);
         Date dt = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String date = sdf.format(dt);
+        // 将表信息存入表信息表
         Tableinfo record = new Tableinfo();
         record.setName(attr[1]);
         record.setUpdatetime(date);
         record.setShowtype(attr[0]);
         record.setPhysicaltablename(tbName);
-        Integer cid = Integer.parseInt(No1Id);
+        Integer cid = Integer.parseInt(comid);
         record.setCid(cid);
         ts.insert(record);
+        // 查询表id
         Tableinfo tableinfo = ts.selectPrimaryKey(record);
 
-        return adminTilesService.creats(attr, No1Id, req, tbName, tableinfo);
+        return adminTilesService.creats(attr, cid, req, tbName, tableinfo);
 
     }
 
@@ -437,71 +440,21 @@ public class AdminTilesController {
      */
     @RequestMapping("/admin_shujus")
     public String shuju3(Model model, HttpServletRequest req) throws Exception {
-        Properties pro = new Properties();
-        // 获取jdbc配置文件内容。
-        InputStream ips = JdbcUtils_40.class.getClassLoader().getResourceAsStream("jdbc.properties");
-        pro.load(ips);
-        String driver = pro.getProperty("jdbc.driver");
-        String localhost = pro.getProperty("jdbc.url");
-        String username = pro.getProperty("jdbc.username");
-        String password = pro.getProperty("jdbc.password");
-        // 2、加载驱动
-        Class.forName(driver);
-        // 3、通过java代码连接上数据库(ip、3306、username、password)
-        Connection conn = DriverManager.getConnection(localhost, username, password);
-        // 4、书写sql语句，执行sql语句，接收结果
 
-        ChineseToPinYin ctpy = new ChineseToPinYin();
-        String tableName = req.getParameter("id");
-        String tableId = req.getParameter("infoId");
-        System.out.println("表的名字是:" + tableName);
-        System.out.println("公司id是:" + tableId);
-        String tableAllName = tableId + ctpy.getPingYin(tableName);
-        System.out.println("表的拼音是:" + tableAllName);
-        String sql = "select * from " + tableAllName;
-
-        PreparedStatement stmt;
-        stmt = conn.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery(sql);
-        ResultSetMetaData data = rs.getMetaData();
-        List list = new ArrayList();
-        int columnCount = 0;
-        for (int i = 1; i <= data.getColumnCount(); i++) {
-            // 获得所有列的数目及实际列数
-            columnCount = data.getColumnCount();
-            // 获得指定列的列名
-            String columnName = data.getColumnName(i);
-            System.out.println("第" + i + "列的列名是:" + columnName);
-            list.add(columnName);
-
-        }
-        for (Object lists : list) {
-            System.out.println(lists);
-        }
-        System.out.println("总列数是=" + columnCount);
-        req.getSession().setAttribute("tableColumn", list);
-        // String infoId = req.getParameter("infoId");
-        // Tableinfo tableinfo =
-        // ts.selectByPrimaryKey(Integer.parseInt(infoId));
-        // String tableName = tableinfo.getPhysicaltablename();
-        // List<Tablecolumninfo> TablecolumninfoList =
-        // tcs.selectView(tableName);
-        // TablecolumninfoList.get(0).setColumnname("序号");
-        // HttpSession session = req.getSession();
-        // session.setAttribute("TablecolumninfoList", TablecolumninfoList);
-        //
-        // model.addAttribute("menus", "3");
-        // String names = req.getParameter("id");
-        //
-        // ChineseToPinYin ctp = new ChineseToPinYin();
-        // String name = ctp.getPingYin(names);
-        // model.addAttribute("name2", names);
-        // model.addAttribute("name1", name);
-        //
-        // JdbcUtil jdbc1 = new JdbcUtil();
-        // ApplicationContext context = jdbc1.getContext();
-        // context = new ClassPathXmlApplicationContext("spring-common.xml");
-        // JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
+        String infoId = req.getParameter("infoId");
+        Tableinfo tableinfo = ts.selectByPrimaryKey(Integer.parseInt(infoId));
+        String tableName = tableinfo.getPhysicaltablename();
+        List<Tablecolumninfo> TablecolumninfoList = tcs.selectView(tableName);
+        TablecolumninfoList.get(0).setColumnname("序号");
+        HttpSession session = req.getSession();
+        session.setAttribute("TablecolumninfoList", TablecolumninfoList);
+        model.addAttribute("menus", "3");
+        String names = req.getParameter("id");
+        ChineseToPinYin ctp = new ChineseToPinYin();
+        String name = ctp.getPingYin(names);
+        model.addAttribute("name2", names);
+        model.addAttribute("name1", name);
+        model.addAttribute("phyName", tableinfo.getPhysicaltablename());
 
         return "admin_shujus.page";
     }

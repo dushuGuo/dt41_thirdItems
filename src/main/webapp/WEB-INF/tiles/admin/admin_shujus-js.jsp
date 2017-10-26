@@ -50,7 +50,7 @@ $("button[data-dismiss=modal]").click(function(){
   $(function () {
 	var t =	$('#example1').DataTable({
 		 "ajax"		: {
-	    	  "url"		: "<%=request.getContextPath()%>/shuju_3.shtml?id=${name1}",
+	    	  "url"		: "<%=request.getContextPath()%>/shuju_4.shtml?id=${phyName}",
 	    	  "method"	: "POST",
 	    	  "headers" : {"Content-Type": "application/json"},
 	    	  "data"	: function(d){

@@ -21,6 +21,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import cn.bdqn.datacockpit.entity.Tablecolumninfo;
+
 public class JdbcUtil {
     private static ApplicationContext context = new ClassPathXmlApplicationContext("spring-common.xml");
 
@@ -134,29 +136,25 @@ public class JdbcUtil {
      * 
      * @param tableName
      */
-    public static int createTable(JdbcTemplate jt, String tableName, Map<String, Object> map,
-            Map<String, Object> mapChina) {
+    public static int createTable(JdbcTemplate jt, String tableName, List<Tablecolumninfo> list) {
         StringBuffer sb = new StringBuffer("");
         sb.append("CREATE TABLE `" + tableName + "` (");
         sb.append(" `id` int(11) NOT NULL AUTO_INCREMENT ,");
-        Set<String> set = map.keySet();
-
-        for (String key : set) {
-
-            if (key.equals("shows")) {
-                sb.append("`" + key + "` int(2) default " + map.get("shows") + ",");
-            } else if (map.get(key).equals("1")) {
-                sb.append("`" + key + "` varchar(255) COMMENT '" + mapChina.get(key) + "',");
-            } else if (map.get(key).equals("3")) {
-                sb.append("`" + key + "` float  COMMENT '" + mapChina.get(key) + "',");
-            } else if (map.get(key).equals("2")) {
-                sb.append("`" + key + "` int(10)  COMMENT '" + mapChina.get(key) + "',");
-            } else if (map.get(key).equals("0")) {
-                sb.append("`times` date ,");
+        for (Tablecolumninfo tablecolumninfo : list) {
+            if (tablecolumninfo.getColumntype().equals("VARCHAR")) {
+                sb.append("`" + cPinYin.getPingYin(tablecolumninfo.getColumnname()) + "` VARCHAR(200) comment '"
+                        + tablecolumninfo.getColumnname() + "',");
+            }
+            if (tablecolumninfo.getColumntype().equals("INTEGER")) {
+                sb.append("`" + cPinYin.getPingYin(tablecolumninfo.getColumnname()) + "` INT comment '"
+                        + tablecolumninfo.getColumnname() + "',");
+            }
+            if (tablecolumninfo.getColumntype().equals("FLOAT")) {
+                sb.append("`" + cPinYin.getPingYin(tablecolumninfo.getColumnname()) + "` FLOAT comment '"
+                        + tablecolumninfo.getColumnname() + "',");
             }
         }
-        // sb.append(" `tbName` varchar(255) DEFAULT '',");
-        sb.append(" PRIMARY KEY (`id`))");
+        sb.append("`show` int, PRIMARY KEY (`id`))");
         try {
             jt.update(sb.toString());
             return 1;
