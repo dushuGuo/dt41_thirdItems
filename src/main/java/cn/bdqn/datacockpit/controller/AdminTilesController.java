@@ -473,6 +473,7 @@ public class AdminTilesController {
             String columnName = data.getColumnName(i);
             System.out.println("第" + i + "列的列名是:" + columnName);
             list.add(columnName);
+
         }
         for (Object lists : list) {
             System.out.println(lists);
