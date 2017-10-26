@@ -26,7 +26,6 @@ import cn.bdqn.datacockpit.entity.Tableinfo;
 import cn.bdqn.datacockpit.mapper.TablecolumninfoMapper;
 import cn.bdqn.datacockpit.mapper.TableinfoMapper;
 import cn.bdqn.datacockpit.service.AdminTilesService;
-import cn.bdqn.datacockpit.utils.ChineseToPinYin;
 import cn.bdqn.datacockpit.utils.JdbcUtil;
 
 /**
@@ -59,20 +58,17 @@ public class AdminTilesServiceImpl implements AdminTilesService {
      *      java.lang.String, javax.servlet.http.HttpServletRequest,
      *      java.lang.String)
      */
+    @SuppressWarnings("resource")
     @Override
     public Map<String, String> creats(String[] attr, Integer cid, HttpServletRequest req, String tbName,
             Tableinfo tableinfo) {
-        ChineseToPinYin ctp = new ChineseToPinYin();
         Map<String, Object> map = new HashMap<String, Object>();
-        Map<String, Object> mapChina = new HashMap<String, Object>();
         for (int i = 0; i < attr.length; i++) {
             if (i == 0) {
                 // 存图形id
                 map.put("shows", attr[0]);
             } else if (2 * i - 1 <= attr.length && i >= 2) {
                 // 存 字段名 和 字段类型
-                map.put(ctp.getPingYin(attr[2 * i - 2]), attr[2 * i - 1]);
-                mapChina.put(ctp.getPingYin(attr[2 * i - 2]), attr[2 * i - 2]);
                 tablecolumninfo.setColumnname(attr[2 * i - 2]);
                 tablecolumninfo.setTid(tableinfo.getId());
                 if (attr[2 * i - 1].equals("1")) {
@@ -89,12 +85,10 @@ public class AdminTilesServiceImpl implements AdminTilesService {
         // 查询表字段名和字段类型
         Tableinfo tableinfo2 = tableinfoMapper.selectPrimaryKey(tableinfo);
         List<Tablecolumninfo> list = tablecolumninfoMapper.selectColumnInfo(tableinfo2.getId());
-        JdbcUtil creats = new JdbcUtil();
-        ApplicationContext context = creats.getContext();
+        ApplicationContext context = JdbcUtil.getContext();
         context = new ClassPathXmlApplicationContext("spring-common.xml");
         JdbcTemplate jt = (JdbcTemplate) context.getBean("jdbcTemplate");
-        creats.createTable(jt, tbName, list);
-
+        JdbcUtil.createTable(jt, tbName, list);
         Map<String, String> maps = new HashMap<String, String>();
         maps.put("flag", "1");
         return maps;
